@@ -1,0 +1,52 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="menu">
+      <h2 data-cy="menuDetailsHeading"><span jhiTranslate="franchiseApp.menu.detail.title">Menu</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ menu.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="franchiseApp.menu.nombre">Nombre</span></dt>
+        <dd>
+          <span>{{ menu.nombre }}</span>
+        </dd>
+        <dt><span jhiTranslate="franchiseApp.menu.precio">Precio</span></dt>
+        <dd>
+          <span>{{ menu.precio }}</span>
+        </dd>
+        <dt><span jhiTranslate="franchiseApp.menu.descripcion">Descripcion</span></dt>
+        <dd>
+          <span>{{ menu.descripcion }}</span>
+        </dd>
+        <dt><span jhiTranslate="franchiseApp.menu.urlImagen">Url Imagen</span></dt>
+        <dd>
+          <span>{{ menu.urlImagen }}</span>
+        </dd>
+        <dt><span jhiTranslate="franchiseApp.menu.isActive">Is Active</span></dt>
+        <dd>
+          <span>{{ menu.isActive }}</span>
+        </dd>
+        <dt><span jhiTranslate="franchiseApp.menu.foreignId">Foreign Id</span></dt>
+        <dd>
+          <span>{{ menu.foreignId }}</span>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/menu', menu.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <div *ngIf="venta">
+      <h2 data-cy="ventaDetailsHeading"><span jhiTranslate="franchiseApp.venta.detail.title">Venta</span></h2>
+
+      <hr />
+
+      <jhi-alert-error></jhi-alert-error>
+
+      <jhi-alert></jhi-alert>
+
+      <dl class="row-md jh-entity-details">
+        <dt><span jhiTranslate="global.field.id">ID</span></dt>
+        <dd>
+          <span>{{ venta.id }}</span>
+        </dd>
+        <dt><span jhiTranslate="franchiseApp.venta.fecha">Fecha</span></dt>
+        <dd>
+          <span>{{ venta.fecha | formatMediumDatetime }}</span>
+        </dd>
+        <dt><span jhiTranslate="franchiseApp.venta.precio">Precio</span></dt>
+        <dd>
+          <span>{{ venta.precio }}</span>
+        </dd>
+        <dt><span jhiTranslate="franchiseApp.venta.foreignId">Foreign Id</span></dt>
+        <dd>
+          <span>{{ venta.foreignId }}</span>
+        </dd>
+        <dt><span jhiTranslate="franchiseApp.venta.menu">Menu</span></dt>
+        <dd>
+          <div *ngIf="venta.menu">
+            <a [routerLink]="['/menu', venta.menu.id, 'view']">{{ venta.menu.id }}</a>
+          </div>
+        </dd>
+      </dl>
+
+      <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">
+        <fa-icon icon="arrow-left"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back">Volver</span>
+      </button>
+
+      <button type="button" [routerLink]="['/venta', venta.id, 'edit']" class="btn btn-primary">
+        <fa-icon icon="pencil-alt"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit">Editar</span>
+      </button>
+    </div>
+  </div>
+</div>
