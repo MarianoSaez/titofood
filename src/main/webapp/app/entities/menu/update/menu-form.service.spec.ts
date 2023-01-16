@@ -26,6 +26,8 @@ describe('Menu Form Service', () => {
             urlImagen: expect.any(Object),
             isActive: expect.any(Object),
             foreignId: expect.any(Object),
+            creado: expect.any(Object),
+            actualizado: expect.any(Object),
           })
         );
       });
@@ -42,6 +44,8 @@ describe('Menu Form Service', () => {
             urlImagen: expect.any(Object),
             isActive: expect.any(Object),
             foreignId: expect.any(Object),
+            creado: expect.any(Object),
+            actualizado: expect.any(Object),
           })
         );
       });

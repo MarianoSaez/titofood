@@ -6,6 +6,8 @@ export interface IMenu {
   urlImagen?: string | null;
   isActive?: boolean | null;
   foreignId?: number | null;
+  creado?: string | null;
+  actualizado?: string | null;
 }
 
 export type NewMenu = Omit<IMenu, 'id'> & { id: null };

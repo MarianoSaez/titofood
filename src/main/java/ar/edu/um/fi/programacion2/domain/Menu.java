@@ -1,6 +1,7 @@
 package ar.edu.um.fi.programacion2.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,10 +39,17 @@ public class Menu implements Serializable {
     private String urlImagen;
 
     @Column(name = "is_active")
+    @JsonProperty("activo")
     private Boolean isActive;
 
     @Column(name = "foreign_id")
     private Double foreignId;
+
+    @Column(name = "creado")
+    private String creado;
+
+    @Column(name = "actualizado")
+    private String actualizado;
 
     @OneToMany(mappedBy = "menu")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -141,6 +149,32 @@ public class Menu implements Serializable {
         this.foreignId = foreignId;
     }
 
+    public String getCreado() {
+        return this.creado;
+    }
+
+    public Menu creado(String creado) {
+        this.setCreado(creado);
+        return this;
+    }
+
+    public void setCreado(String creado) {
+        this.creado = creado;
+    }
+
+    public String getActualizado() {
+        return this.actualizado;
+    }
+
+    public Menu actualizado(String actualizado) {
+        this.setActualizado(actualizado);
+        return this;
+    }
+
+    public void setActualizado(String actualizado) {
+        this.actualizado = actualizado;
+    }
+
     public Set<Venta> getVentas() {
         return this.ventas;
     }
@@ -202,6 +236,8 @@ public class Menu implements Serializable {
             ", urlImagen='" + getUrlImagen() + "'" +
             ", isActive='" + getIsActive() + "'" +
             ", foreignId=" + getForeignId() +
+            ", creado='" + getCreado() + "'" +
+            ", actualizado='" + getActualizado() + "'" +
             "}";
     }
 }

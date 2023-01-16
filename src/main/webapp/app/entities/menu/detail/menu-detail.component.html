@@ -38,6 +38,14 @@
         <dd>
           <span>{{ menu.foreignId }}</span>
         </dd>
+        <dt><span jhiTranslate="franchiseApp.menu.creado">Creado</span></dt>
+        <dd>
+          <span>{{ menu.creado }}</span>
+        </dd>
+        <dt><span jhiTranslate="franchiseApp.menu.actualizado">Actualizado</span></dt>
+        <dd>
+          <span>{{ menu.actualizado }}</span>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

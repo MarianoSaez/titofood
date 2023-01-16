@@ -47,6 +47,12 @@ class MenuResourceIT {
     private static final Double DEFAULT_FOREIGN_ID = 1D;
     private static final Double UPDATED_FOREIGN_ID = 2D;
 
+    private static final String DEFAULT_CREADO = "AAAAAAAAAA";
+    private static final String UPDATED_CREADO = "BBBBBBBBBB";
+
+    private static final String DEFAULT_ACTUALIZADO = "AAAAAAAAAA";
+    private static final String UPDATED_ACTUALIZADO = "BBBBBBBBBB";
+
     private static final String ENTITY_API_URL = "/api/menus";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -77,7 +83,9 @@ class MenuResourceIT {
             .descripcion(DEFAULT_DESCRIPCION)
             .urlImagen(DEFAULT_URL_IMAGEN)
             .isActive(DEFAULT_IS_ACTIVE)
-            .foreignId(DEFAULT_FOREIGN_ID);
+            .foreignId(DEFAULT_FOREIGN_ID)
+            .creado(DEFAULT_CREADO)
+            .actualizado(DEFAULT_ACTUALIZADO);
         return menu;
     }
 
@@ -94,7 +102,9 @@ class MenuResourceIT {
             .descripcion(UPDATED_DESCRIPCION)
             .urlImagen(UPDATED_URL_IMAGEN)
             .isActive(UPDATED_IS_ACTIVE)
-            .foreignId(UPDATED_FOREIGN_ID);
+            .foreignId(UPDATED_FOREIGN_ID)
+            .creado(UPDATED_CREADO)
+            .actualizado(UPDATED_ACTUALIZADO);
         return menu;
     }
 
@@ -122,6 +132,8 @@ class MenuResourceIT {
         assertThat(testMenu.getUrlImagen()).isEqualTo(DEFAULT_URL_IMAGEN);
         assertThat(testMenu.getIsActive()).isEqualTo(DEFAULT_IS_ACTIVE);
         assertThat(testMenu.getForeignId()).isEqualTo(DEFAULT_FOREIGN_ID);
+        assertThat(testMenu.getCreado()).isEqualTo(DEFAULT_CREADO);
+        assertThat(testMenu.getActualizado()).isEqualTo(DEFAULT_ACTUALIZADO);
     }
 
     @Test
@@ -159,7 +171,9 @@ class MenuResourceIT {
             .andExpect(jsonPath("$.[*].descripcion").value(hasItem(DEFAULT_DESCRIPCION)))
             .andExpect(jsonPath("$.[*].urlImagen").value(hasItem(DEFAULT_URL_IMAGEN)))
             .andExpect(jsonPath("$.[*].isActive").value(hasItem(DEFAULT_IS_ACTIVE.booleanValue())))
-            .andExpect(jsonPath("$.[*].foreignId").value(hasItem(DEFAULT_FOREIGN_ID.doubleValue())));
+            .andExpect(jsonPath("$.[*].foreignId").value(hasItem(DEFAULT_FOREIGN_ID.doubleValue())))
+            .andExpect(jsonPath("$.[*].creado").value(hasItem(DEFAULT_CREADO)))
+            .andExpect(jsonPath("$.[*].actualizado").value(hasItem(DEFAULT_ACTUALIZADO)));
     }
 
     @Test
@@ -179,7 +193,9 @@ class MenuResourceIT {
             .andExpect(jsonPath("$.descripcion").value(DEFAULT_DESCRIPCION))
             .andExpect(jsonPath("$.urlImagen").value(DEFAULT_URL_IMAGEN))
             .andExpect(jsonPath("$.isActive").value(DEFAULT_IS_ACTIVE.booleanValue()))
-            .andExpect(jsonPath("$.foreignId").value(DEFAULT_FOREIGN_ID.doubleValue()));
+            .andExpect(jsonPath("$.foreignId").value(DEFAULT_FOREIGN_ID.doubleValue()))
+            .andExpect(jsonPath("$.creado").value(DEFAULT_CREADO))
+            .andExpect(jsonPath("$.actualizado").value(DEFAULT_ACTUALIZADO));
     }
 
     @Test
@@ -207,7 +223,9 @@ class MenuResourceIT {
             .descripcion(UPDATED_DESCRIPCION)
             .urlImagen(UPDATED_URL_IMAGEN)
             .isActive(UPDATED_IS_ACTIVE)
-            .foreignId(UPDATED_FOREIGN_ID);
+            .foreignId(UPDATED_FOREIGN_ID)
+            .creado(UPDATED_CREADO)
+            .actualizado(UPDATED_ACTUALIZADO);
 
         restMenuMockMvc
             .perform(
@@ -227,6 +245,8 @@ class MenuResourceIT {
         assertThat(testMenu.getUrlImagen()).isEqualTo(UPDATED_URL_IMAGEN);
         assertThat(testMenu.getIsActive()).isEqualTo(UPDATED_IS_ACTIVE);
         assertThat(testMenu.getForeignId()).isEqualTo(UPDATED_FOREIGN_ID);
+        assertThat(testMenu.getCreado()).isEqualTo(UPDATED_CREADO);
+        assertThat(testMenu.getActualizado()).isEqualTo(UPDATED_ACTUALIZADO);
     }
 
     @Test
@@ -317,6 +337,8 @@ class MenuResourceIT {
         assertThat(testMenu.getUrlImagen()).isEqualTo(UPDATED_URL_IMAGEN);
         assertThat(testMenu.getIsActive()).isEqualTo(DEFAULT_IS_ACTIVE);
         assertThat(testMenu.getForeignId()).isEqualTo(DEFAULT_FOREIGN_ID);
+        assertThat(testMenu.getCreado()).isEqualTo(DEFAULT_CREADO);
+        assertThat(testMenu.getActualizado()).isEqualTo(DEFAULT_ACTUALIZADO);
     }
 
     @Test
@@ -337,7 +359,9 @@ class MenuResourceIT {
             .descripcion(UPDATED_DESCRIPCION)
             .urlImagen(UPDATED_URL_IMAGEN)
             .isActive(UPDATED_IS_ACTIVE)
-            .foreignId(UPDATED_FOREIGN_ID);
+            .foreignId(UPDATED_FOREIGN_ID)
+            .creado(UPDATED_CREADO)
+            .actualizado(UPDATED_ACTUALIZADO);
 
         restMenuMockMvc
             .perform(
@@ -357,6 +381,8 @@ class MenuResourceIT {
         assertThat(testMenu.getUrlImagen()).isEqualTo(UPDATED_URL_IMAGEN);
         assertThat(testMenu.getIsActive()).isEqualTo(UPDATED_IS_ACTIVE);
         assertThat(testMenu.getForeignId()).isEqualTo(UPDATED_FOREIGN_ID);
+        assertThat(testMenu.getCreado()).isEqualTo(UPDATED_CREADO);
+        assertThat(testMenu.getActualizado()).isEqualTo(UPDATED_ACTUALIZADO);
     }
 
     @Test

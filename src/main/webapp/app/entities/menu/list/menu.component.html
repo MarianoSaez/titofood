@@ -74,6 +74,18 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
+          <th scope="col" jhiSortBy="creado">
+            <div class="d-flex">
+              <span jhiTranslate="franchiseApp.menu.creado">Creado</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="actualizado">
+            <div class="d-flex">
+              <span jhiTranslate="franchiseApp.menu.actualizado">Actualizado</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -93,6 +105,8 @@
           <td>{{ menu.urlImagen }}</td>
           <td>{{ menu.isActive }}</td>
           <td>{{ menu.foreignId }}</td>
+          <td>{{ menu.creado }}</td>
+          <td>{{ menu.actualizado }}</td>
           <td class="text-end">
             <div class="btn-group">
               <button type="submit" [routerLink]="['/menu', menu.id, 'view']" class="btn btn-info btn-sm" data-cy="entityDetailsButton">

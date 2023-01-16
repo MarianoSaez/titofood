@@ -24,6 +24,8 @@
       "urlImagen": "Url Imagen",
       "isActive": "Is Active",
       "foreignId": "Foreign Id",
+      "creado": "Creado",
+      "actualizado": "Actualizado",
       "venta": "Venta"
     }
   }

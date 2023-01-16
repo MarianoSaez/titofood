@@ -2,6 +2,7 @@ package ar.edu.um.fi.programacion2.web.rest;
 
 import ar.edu.um.fi.programacion2.domain.Menu;
 import ar.edu.um.fi.programacion2.repository.MenuRepository;
+import ar.edu.um.fi.programacion2.service.MenuService;
 import ar.edu.um.fi.programacion2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -28,7 +28,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class MenuResource {
 
     private final Logger log = LoggerFactory.getLogger(MenuResource.class);
@@ -38,9 +37,12 @@ public class MenuResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final MenuService menuService;
+
     private final MenuRepository menuRepository;
 
-    public MenuResource(MenuRepository menuRepository) {
+    public MenuResource(MenuService menuService, MenuRepository menuRepository) {
+        this.menuService = menuService;
         this.menuRepository = menuRepository;
     }
 
@@ -57,7 +59,7 @@ public class MenuResource {
         if (menu.getId() != null) {
             throw new BadRequestAlertException("A new menu cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Menu result = menuRepository.save(menu);
+        Menu result = menuService.save(menu);
         return ResponseEntity
             .created(new URI("/api/menus/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -89,7 +91,7 @@ public class MenuResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Menu result = menuRepository.save(menu);
+        Menu result = menuService.update(menu);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, menu.getId().toString()))
@@ -122,31 +124,7 @@ public class MenuResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Menu> result = menuRepository
-            .findById(menu.getId())
-            .map(existingMenu -> {
-                if (menu.getNombre() != null) {
-                    existingMenu.setNombre(menu.getNombre());
-                }
-                if (menu.getPrecio() != null) {
-                    existingMenu.setPrecio(menu.getPrecio());
-                }
-                if (menu.getDescripcion() != null) {
-                    existingMenu.setDescripcion(menu.getDescripcion());
-                }
-                if (menu.getUrlImagen() != null) {
-                    existingMenu.setUrlImagen(menu.getUrlImagen());
-                }
-                if (menu.getIsActive() != null) {
-                    existingMenu.setIsActive(menu.getIsActive());
-                }
-                if (menu.getForeignId() != null) {
-                    existingMenu.setForeignId(menu.getForeignId());
-                }
-
-                return existingMenu;
-            })
-            .map(menuRepository::save);
+        Optional<Menu> result = menuService.partialUpdate(menu);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -163,7 +141,7 @@ public class MenuResource {
     @GetMapping("/menus")
     public ResponseEntity<List<Menu>> getAllMenus(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Menus");
-        Page<Menu> page = menuRepository.findAll(pageable);
+        Page<Menu> page = menuService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -177,7 +155,7 @@ public class MenuResource {
     @GetMapping("/menus/{id}")
     public ResponseEntity<Menu> getMenu(@PathVariable Long id) {
         log.debug("REST request to get Menu : {}", id);
-        Optional<Menu> menu = menuRepository.findById(id);
+        Optional<Menu> menu = menuService.findOne(id);
         return ResponseUtil.wrapOrNotFound(menu);
     }
 
@@ -190,7 +168,7 @@ public class MenuResource {
     @DeleteMapping("/menus/{id}")
     public ResponseEntity<Void> deleteMenu(@PathVariable Long id) {
         log.debug("REST request to delete Menu : {}", id);
-        menuRepository.deleteById(id);
+        menuService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

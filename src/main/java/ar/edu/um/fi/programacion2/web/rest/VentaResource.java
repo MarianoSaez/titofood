@@ -2,6 +2,7 @@ package ar.edu.um.fi.programacion2.web.rest;
 
 import ar.edu.um.fi.programacion2.domain.Venta;
 import ar.edu.um.fi.programacion2.repository.VentaRepository;
+import ar.edu.um.fi.programacion2.service.VentaService;
 import ar.edu.um.fi.programacion2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import tech.jhipster.web.util.HeaderUtil;
@@ -28,7 +28,6 @@ import tech.jhipster.web.util.ResponseUtil;
  */
 @RestController
 @RequestMapping("/api")
-@Transactional
 public class VentaResource {
 
     private final Logger log = LoggerFactory.getLogger(VentaResource.class);
@@ -38,9 +37,12 @@ public class VentaResource {
     @Value("${jhipster.clientApp.name}")
     private String applicationName;
 
+    private final VentaService ventaService;
+
     private final VentaRepository ventaRepository;
 
-    public VentaResource(VentaRepository ventaRepository) {
+    public VentaResource(VentaService ventaService, VentaRepository ventaRepository) {
+        this.ventaService = ventaService;
         this.ventaRepository = ventaRepository;
     }
 
@@ -57,7 +59,7 @@ public class VentaResource {
         if (venta.getId() != null) {
             throw new BadRequestAlertException("A new venta cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Venta result = ventaRepository.save(venta);
+        Venta result = ventaService.save(venta);
         return ResponseEntity
             .created(new URI("/api/ventas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -89,7 +91,7 @@ public class VentaResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Venta result = ventaRepository.save(venta);
+        Venta result = ventaService.update(venta);
         return ResponseEntity
             .ok()
             .headers(HeaderUtil.createEntityUpdateAlert(applicationName, true, ENTITY_NAME, venta.getId().toString()))
@@ -122,22 +124,7 @@ public class VentaResource {
             throw new BadRequestAlertException("Entity not found", ENTITY_NAME, "idnotfound");
         }
 
-        Optional<Venta> result = ventaRepository
-            .findById(venta.getId())
-            .map(existingVenta -> {
-                if (venta.getFecha() != null) {
-                    existingVenta.setFecha(venta.getFecha());
-                }
-                if (venta.getPrecio() != null) {
-                    existingVenta.setPrecio(venta.getPrecio());
-                }
-                if (venta.getForeignId() != null) {
-                    existingVenta.setForeignId(venta.getForeignId());
-                }
-
-                return existingVenta;
-            })
-            .map(ventaRepository::save);
+        Optional<Venta> result = ventaService.partialUpdate(venta);
 
         return ResponseUtil.wrapOrNotFound(
             result,
@@ -154,7 +141,7 @@ public class VentaResource {
     @GetMapping("/ventas")
     public ResponseEntity<List<Venta>> getAllVentas(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
         log.debug("REST request to get a page of Ventas");
-        Page<Venta> page = ventaRepository.findAll(pageable);
+        Page<Venta> page = ventaService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
@@ -168,7 +155,7 @@ public class VentaResource {
     @GetMapping("/ventas/{id}")
     public ResponseEntity<Venta> getVenta(@PathVariable Long id) {
         log.debug("REST request to get Venta : {}", id);
-        Optional<Venta> venta = ventaRepository.findById(id);
+        Optional<Venta> venta = ventaService.findOne(id);
         return ResponseUtil.wrapOrNotFound(venta);
     }
 
@@ -181,7 +168,7 @@ public class VentaResource {
     @DeleteMapping("/ventas/{id}")
     public ResponseEntity<Void> deleteVenta(@PathVariable Long id) {
         log.debug("REST request to delete Venta : {}", id);
-        ventaRepository.deleteById(id);
+        ventaService.delete(id);
         return ResponseEntity
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))

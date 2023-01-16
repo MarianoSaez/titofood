@@ -24,6 +24,8 @@ type MenuFormGroupContent = {
   urlImagen: FormControl<IMenu['urlImagen']>;
   isActive: FormControl<IMenu['isActive']>;
   foreignId: FormControl<IMenu['foreignId']>;
+  creado: FormControl<IMenu['creado']>;
+  actualizado: FormControl<IMenu['actualizado']>;
 };
 
 export type MenuFormGroup = FormGroup<MenuFormGroupContent>;
@@ -49,6 +51,8 @@ export class MenuFormService {
       urlImagen: new FormControl(menuRawValue.urlImagen),
       isActive: new FormControl(menuRawValue.isActive),
       foreignId: new FormControl(menuRawValue.foreignId),
+      creado: new FormControl(menuRawValue.creado),
+      actualizado: new FormControl(menuRawValue.actualizado),
     });
   }
 
