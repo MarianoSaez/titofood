@@ -44,7 +44,8 @@ public class MenuService {
                 // Como este menu ya existe en la DB ahora controlamos si fue actualizado
             } else {
                 // Como no existe en la DB y es un menu activo actualmente lo agregamos
-
+                menuRepository.save(menu);
+                log.info("New Menu entity saved : {}", menu);
             }
         }
 

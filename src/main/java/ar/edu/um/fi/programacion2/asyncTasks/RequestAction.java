@@ -80,7 +80,7 @@ public class RequestAction {
         if (Objects.equals(responseAccion.getAccion(), "menu")) {
             // Save new menu
             MenuReponse menuAccion = new ObjectMapper().readValue(serializedResponse, MenuReponse.class);
-            log.info("Response from main service : {}", menuAccion.getMenus());
+            menuService.updateActiveMenus(menuAccion.getMenus());
         } else if (Objects.equals(responseAccion.getAccion(), "reporte")) {
             // Check the type
 
