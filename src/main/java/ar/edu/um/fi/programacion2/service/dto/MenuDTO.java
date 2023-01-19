@@ -8,7 +8,7 @@ import java.io.Serializable;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MenuDTO implements Serializable {
 
-    private Long id;
+    //    private Long id;
     private String nombre;
     private Float precio;
     private String descripcion;
@@ -17,16 +17,31 @@ public class MenuDTO implements Serializable {
     @JsonProperty("activo")
     private Boolean isActive;
 
+    @JsonProperty("id")
     private Double foreignId;
+
     private String creado;
     private String actualizado;
+
+    public Menu castToMenu() {
+        Menu menu = new Menu();
+        menu.setNombre(nombre);
+        menu.setPrecio(precio);
+        menu.setDescripcion(descripcion);
+        menu.setUrlImagen(urlImagen);
+        menu.setIsActive(true);
+        menu.setForeignId(foreignId);
+        menu.setCreado(creado);
+        menu.setActualizado(actualizado);
+        return menu;
+    }
 
     @Override
     public String toString() {
         return (
             "MenuDTO{" +
-            "id=" +
-            id +
+            //            "id=" +
+            //            id +
             ", nombre='" +
             nombre +
             '\'' +
@@ -52,13 +67,13 @@ public class MenuDTO implements Serializable {
         );
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    //    public Long getId() {
+    //        return id;
+    //    }
+    //
+    //    public void setId(Long id) {
+    //        this.id = id;
+    //    }
 
     public String getNombre() {
         return nombre;
@@ -129,7 +144,7 @@ public class MenuDTO implements Serializable {
     }
 
     public MenuDTO(Menu menu) {
-        this.id = menu.getId();
+        //        this.id = menu.getId();
         this.nombre = menu.getNombre();
         this.precio = menu.getPrecio();
         this.descripcion = menu.getDescripcion();

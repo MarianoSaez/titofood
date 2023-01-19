@@ -2,8 +2,11 @@ package ar.edu.um.fi.programacion2.service;
 
 import ar.edu.um.fi.programacion2.domain.Menu;
 import ar.edu.um.fi.programacion2.repository.MenuRepository;
+import ar.edu.um.fi.programacion2.service.dto.MenuDTO;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -32,18 +35,37 @@ public class MenuService {
      * @param menus is a list a menu entities
      * @return the list of all active menus
      */
-    public List<Menu> updateActiveMenus(List<Menu> menus) {
+    public List<Menu> updateActiveMenus(List<MenuDTO> menus) {
         // Se deben evaluar los casos donde:
-        //  - Se haya agregado un nuevo menu
-        //  - Se haya dado de baja/desactivado un menu
-        //  - Se haya modificado atributos de un menu existente
-        for (Menu menu : menus) {
+        //  - Se haya dado de baja/desactivado un menu -> No se encuentra presente en el response
+        //  - Se haya agregado un nuevo menu -> Nuevo id presente en el response
+        //  - Se haya modificado atributos de un menu existente -> Atrubito actualizado diferente del actual
+
+        // Mototruco funcional
+        List<Double> foreignIdList = menus.stream().map(MenuDTO::getForeignId).collect(Collectors.toList());
+
+        menuRepository
+            .findByForeignIdIsNullOrForeignIdNotIn(foreignIdList)
+            .forEach(m -> {
+                m.setIsActive(false);
+                menuRepository.save(m);
+            });
+
+        for (MenuDTO menuDto : menus) {
             // Intentar obtener desde la DB el menu actual
-            Optional<Menu> savedMenu = menuRepository.findOneByForeignId((double) menu.getId());
+            Optional<Menu> savedMenu = menuRepository.findOneByForeignId(menuDto.getForeignId());
             if (savedMenu.isPresent()) {
                 // Como este menu ya existe en la DB ahora controlamos si fue actualizado
+                Menu existingMenu = savedMenu.get();
+                if (!Objects.equals(existingMenu.getActualizado(), menuDto.getActualizado())) {
+                    // Si las fechas de actualizacion NO coinciden es necesario modificar
+                    Menu menu = menuDto.castToMenu();
+                    menuRepository.save(menu);
+                    log.info("Updated Menu entity. Last update: {}", existingMenu.getActualizado());
+                }
             } else {
                 // Como no existe en la DB y es un menu activo actualmente lo agregamos
+                Menu menu = menuDto.castToMenu();
                 menuRepository.save(menu);
                 log.info("New Menu entity saved : {}", menu);
             }
@@ -52,7 +74,7 @@ public class MenuService {
         // Se debe agregar en la interfaz MenuRepository un metodo que retorne los menus activos
         // que seria una especie de findAllByIsActiveTrue o algo asi, hay que investigar
         // en la docu de los repositories
-        return menuRepository.findAll(); // Provisorio para cumplir con el tipo de dato retornado
+        return menuRepository.findByIsActiveTrue();
     }
 
     /**

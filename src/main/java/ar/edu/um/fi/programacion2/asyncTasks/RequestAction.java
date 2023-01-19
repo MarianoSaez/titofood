@@ -1,5 +1,6 @@
 package ar.edu.um.fi.programacion2.asyncTasks;
 
+import ar.edu.um.fi.programacion2.domain.Menu;
 import ar.edu.um.fi.programacion2.domain.reponseAccion.AbstractResponseAccion;
 import ar.edu.um.fi.programacion2.domain.reponseAccion.MenuReponse;
 import ar.edu.um.fi.programacion2.service.MenuService;
@@ -10,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +82,8 @@ public class RequestAction {
         if (Objects.equals(responseAccion.getAccion(), "menu")) {
             // Save new menu
             MenuReponse menuAccion = new ObjectMapper().readValue(serializedResponse, MenuReponse.class);
-            menuService.updateActiveMenus(menuAccion.getMenus());
+            List<Menu> l = menuService.updateActiveMenus(menuAccion.getMenus());
+            log.info("Menus updated successfully : {}", l);
         } else if (Objects.equals(responseAccion.getAccion(), "reporte")) {
             // Check the type
 
