@@ -1,11 +1,15 @@
 package ar.edu.um.fi.programacion2.web.rest;
 
+import ar.edu.um.fi.programacion2.domain.Menu;
 import ar.edu.um.fi.programacion2.domain.Venta;
+import ar.edu.um.fi.programacion2.repository.MenuRepository;
 import ar.edu.um.fi.programacion2.repository.VentaRepository;
+import ar.edu.um.fi.programacion2.service.MenuService;
 import ar.edu.um.fi.programacion2.service.VentaService;
 import ar.edu.um.fi.programacion2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -15,7 +19,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -39,10 +42,13 @@ public class VentaResource {
 
     private final VentaService ventaService;
 
+    private final MenuService menuService;
+
     private final VentaRepository ventaRepository;
 
-    public VentaResource(VentaService ventaService, VentaRepository ventaRepository) {
+    public VentaResource(VentaService ventaService, MenuService menuService, VentaRepository ventaRepository) {
         this.ventaService = ventaService;
+        this.menuService = menuService;
         this.ventaRepository = ventaRepository;
     }
 
@@ -60,6 +66,7 @@ public class VentaResource {
             throw new BadRequestAlertException("A new venta cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Venta result = ventaService.save(venta);
+        System.out.println("\n" + result + "\n");
         return ResponseEntity
             .created(new URI("/api/ventas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -69,7 +76,7 @@ public class VentaResource {
     /**
      * {@code PUT  /ventas/:id} : Updates an existing venta.
      *
-     * @param id the id of the venta to save.
+     * @param id    the id of the venta to save.
      * @param venta the venta to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated venta,
      * or with status {@code 400 (Bad Request)} if the venta is not valid,
@@ -101,7 +108,7 @@ public class VentaResource {
     /**
      * {@code PATCH  /ventas/:id} : Partial updates given fields of an existing venta, field will ignore if it is null
      *
-     * @param id the id of the venta to save.
+     * @param id    the id of the venta to save.
      * @param venta the venta to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated venta,
      * or with status {@code 400 (Bad Request)} if the venta is not valid,
@@ -173,5 +180,28 @@ public class VentaResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/comprar/{id}")
+    public ResponseEntity<Venta> createCompra(@RequestBody Venta venta, @PathVariable Long id) throws URISyntaxException {
+        log.debug("REST request to save Venta : {}", venta);
+        if (venta.getId() != null) {
+            throw new BadRequestAlertException("A new venta cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+
+        Instant fecha = Instant.now();
+        venta.setFecha(fecha);
+
+        Menu menu = menuService.findOne(id).get(); // Trae el menu segun el id ingresado en el endpoint
+        venta.setMenu(menu); // Setea el nuevo menu en el objeto Venta
+
+        venta.setPrecio(menu.getPrecio());
+
+        Venta result = ventaService.save(venta); // Guarda el nuevo objeto Venta
+
+        return ResponseEntity
+            .created(new URI("/api/comprar/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 }
