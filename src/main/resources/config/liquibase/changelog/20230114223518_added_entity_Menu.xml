@@ -42,6 +42,20 @@
         </createTable>
     </changeSet>
 
+    <changeSet id="20230114223518-1-relations" author="jhipster">
+
+        <createTable tableName="rel_menu__venta">
+            <column name="venta_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="menu_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="menu_id, venta_id" tableName="rel_menu__venta"/>
+    </changeSet>
+
     <!-- jhipster-needle-liquibase-add-changeset - JHipster will add changesets here -->
 
     <!--

@@ -3,6 +3,8 @@ package ar.edu.um.fi.programacion2.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -33,9 +35,10 @@ public class Venta implements Serializable {
     @Column(name = "foreign_id")
     private Double foreignId;
 
-    @ManyToOne
+    @ManyToMany(mappedBy = "ventas")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "ventas" }, allowSetters = true)
-    private Menu menu;
+    private Set<Menu> menus = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -91,16 +94,34 @@ public class Venta implements Serializable {
         this.foreignId = foreignId;
     }
 
-    public Menu getMenu() {
-        return this.menu;
+    public Set<Menu> getMenus() {
+        return this.menus;
     }
 
-    public void setMenu(Menu menu) {
-        this.menu = menu;
+    public void setMenus(Set<Menu> menus) {
+        if (this.menus != null) {
+            this.menus.forEach(i -> i.removeVenta(this));
+        }
+        if (menus != null) {
+            menus.forEach(i -> i.addVenta(this));
+        }
+        this.menus = menus;
     }
 
-    public Venta menu(Menu menu) {
-        this.setMenu(menu);
+    public Venta menus(Set<Menu> menus) {
+        this.setMenus(menus);
+        return this;
+    }
+
+    public Venta addMenu(Menu menu) {
+        this.menus.add(menu);
+        menu.getVentas().add(this);
+        return this;
+    }
+
+    public Venta removeMenu(Menu menu) {
+        this.menus.remove(menu);
+        menu.getVentas().remove(this);
         return this;
     }
 

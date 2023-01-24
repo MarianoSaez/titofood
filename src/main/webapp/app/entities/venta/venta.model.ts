@@ -6,7 +6,7 @@ export interface IVenta {
   fecha?: dayjs.Dayjs | null;
   precio?: number | null;
   foreignId?: number | null;
-  menu?: Pick<IMenu, 'id'> | null;
+  menus?: Pick<IMenu, 'id'>[] | null;
 }
 
 export type NewVenta = Omit<IVenta, 'id'> & { id: null };

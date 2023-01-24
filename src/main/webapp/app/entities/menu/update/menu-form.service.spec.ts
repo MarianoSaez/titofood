@@ -28,6 +28,7 @@ describe('Menu Form Service', () => {
             foreignId: expect.any(Object),
             creado: expect.any(Object),
             actualizado: expect.any(Object),
+            ventas: expect.any(Object),
           })
         );
       });
@@ -46,6 +47,7 @@ describe('Menu Form Service', () => {
             foreignId: expect.any(Object),
             creado: expect.any(Object),
             actualizado: expect.any(Object),
+            ventas: expect.any(Object),
           })
         );
       });

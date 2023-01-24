@@ -9,6 +9,8 @@ import { of, Subject, from } from 'rxjs';
 import { MenuFormService } from './menu-form.service';
 import { MenuService } from '../service/menu.service';
 import { IMenu } from '../menu.model';
+import { IVenta } from 'app/entities/venta/venta.model';
+import { VentaService } from 'app/entities/venta/service/venta.service';
 
 import { MenuUpdateComponent } from './menu-update.component';
 
@@ -18,6 +20,7 @@ describe('Menu Management Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let menuFormService: MenuFormService;
   let menuService: MenuService;
+  let ventaService: VentaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -40,17 +43,43 @@ describe('Menu Management Update Component', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     menuFormService = TestBed.inject(MenuFormService);
     menuService = TestBed.inject(MenuService);
+    ventaService = TestBed.inject(VentaService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('Should update editForm', () => {
+    it('Should call Venta query and add missing value', () => {
       const menu: IMenu = { id: 456 };
+      const ventas: IVenta[] = [{ id: 69176 }];
+      menu.ventas = ventas;
+
+      const ventaCollection: IVenta[] = [{ id: 84910 }];
+      jest.spyOn(ventaService, 'query').mockReturnValue(of(new HttpResponse({ body: ventaCollection })));
+      const additionalVentas = [...ventas];
+      const expectedCollection: IVenta[] = [...additionalVentas, ...ventaCollection];
+      jest.spyOn(ventaService, 'addVentaToCollectionIfMissing').mockReturnValue(expectedCollection);
 
       activatedRoute.data = of({ menu });
       comp.ngOnInit();
 
+      expect(ventaService.query).toHaveBeenCalled();
+      expect(ventaService.addVentaToCollectionIfMissing).toHaveBeenCalledWith(
+        ventaCollection,
+        ...additionalVentas.map(expect.objectContaining)
+      );
+      expect(comp.ventasSharedCollection).toEqual(expectedCollection);
+    });
+
+    it('Should update editForm', () => {
+      const menu: IMenu = { id: 456 };
+      const venta: IVenta = { id: 96538 };
+      menu.ventas = [venta];
+
+      activatedRoute.data = of({ menu });
+      comp.ngOnInit();
+
+      expect(comp.ventasSharedCollection).toContain(venta);
       expect(comp.menu).toEqual(menu);
     });
   });
@@ -120,6 +149,18 @@ describe('Menu Management Update Component', () => {
       expect(menuService.update).toHaveBeenCalled();
       expect(comp.isSaving).toEqual(false);
       expect(comp.previousState).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Compare relationships', () => {
+    describe('compareVenta', () => {
+      it('Should forward to ventaService', () => {
+        const entity = { id: 123 };
+        const entity2 = { id: 456 };
+        jest.spyOn(ventaService, 'compareVenta');
+        comp.compareVenta(entity, entity2);
+        expect(ventaService.compareVenta).toHaveBeenCalledWith(entity, entity2);
+      });
     });
   });
 });

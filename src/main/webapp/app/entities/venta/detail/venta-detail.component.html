@@ -26,12 +26,6 @@
         <dd>
           <span>{{ venta.foreignId }}</span>
         </dd>
-        <dt><span jhiTranslate="franchiseApp.venta.menu">Menu</span></dt>
-        <dd>
-          <div *ngIf="venta.menu">
-            <a [routerLink]="['/menu', venta.menu.id, 'view']">{{ venta.menu.id }}</a>
-          </div>
-        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

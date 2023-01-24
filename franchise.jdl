@@ -1,0 +1,41 @@
+
+application {
+  config {
+    baseName franchise
+    applicationType monolith
+    packageName ar.edu.um.fi.programacion2
+    buildTool maven
+    devDatabaseType mariadb
+    prodDatabaseType mariadb
+    authenticationType jwt
+    languages [es,en]
+    nativeLanguage es
+    enableSwaggerCodegen true
+  }
+  entities Menu, Venta
+}
+
+entity Menu {
+	nombre String
+    precio Float
+    descripcion String
+    urlImagen String
+    isActive Boolean
+    foreignId Double
+    creado String
+    actualizado String
+}
+
+entity Venta {
+	fecha Instant
+    precio Float
+	foreignId Double
+}
+
+relationship ManyToMany {
+  Menu to Venta
+}
+
+paginate Menu with infinite-scroll
+paginate Venta with pagination
+service Venta, Menu with serviceClass

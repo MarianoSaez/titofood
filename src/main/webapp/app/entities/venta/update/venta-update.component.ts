@@ -2,13 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 
 import { VentaFormService, VentaFormGroup } from './venta-form.service';
 import { IVenta } from '../venta.model';
 import { VentaService } from '../service/venta.service';
-import { IMenu } from 'app/entities/menu/menu.model';
-import { MenuService } from 'app/entities/menu/service/menu.service';
 
 @Component({
   selector: 'jhi-venta-update',
@@ -18,18 +16,13 @@ export class VentaUpdateComponent implements OnInit {
   isSaving = false;
   venta: IVenta | null = null;
 
-  menusSharedCollection: IMenu[] = [];
-
   editForm: VentaFormGroup = this.ventaFormService.createVentaFormGroup();
 
   constructor(
     protected ventaService: VentaService,
     protected ventaFormService: VentaFormService,
-    protected menuService: MenuService,
     protected activatedRoute: ActivatedRoute
   ) {}
-
-  compareMenu = (o1: IMenu | null, o2: IMenu | null): boolean => this.menuService.compareMenu(o1, o2);
 
   ngOnInit(): void {
     this.activatedRoute.data.subscribe(({ venta }) => {
@@ -37,8 +30,6 @@ export class VentaUpdateComponent implements OnInit {
       if (venta) {
         this.updateForm(venta);
       }
-
-      this.loadRelationshipsOptions();
     });
   }
 
@@ -78,15 +69,5 @@ export class VentaUpdateComponent implements OnInit {
   protected updateForm(venta: IVenta): void {
     this.venta = venta;
     this.ventaFormService.resetForm(this.editForm, venta);
-
-    this.menusSharedCollection = this.menuService.addMenuToCollectionIfMissing<IMenu>(this.menusSharedCollection, venta.menu);
-  }
-
-  protected loadRelationshipsOptions(): void {
-    this.menuService
-      .query()
-      .pipe(map((res: HttpResponse<IMenu[]>) => res.body ?? []))
-      .pipe(map((menus: IMenu[]) => this.menuService.addMenuToCollectionIfMissing<IMenu>(menus, this.venta?.menu)))
-      .subscribe((menus: IMenu[]) => (this.menusSharedCollection = menus));
   }
 }

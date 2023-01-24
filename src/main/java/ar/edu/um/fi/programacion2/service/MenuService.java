@@ -154,6 +154,15 @@ public class MenuService {
     }
 
     /**
+     * Get all the menus with eager load of many-to-many relationships.
+     *
+     * @return the list of entities.
+     */
+    public Page<Menu> findAllWithEagerRelationships(Pageable pageable) {
+        return menuRepository.findAllWithEagerRelationships(pageable);
+    }
+
+    /**
      * Get one menu by id.
      *
      * @param id the id of the entity.
@@ -162,7 +171,7 @@ public class MenuService {
     @Transactional(readOnly = true)
     public Optional<Menu> findOne(Long id) {
         log.debug("Request to get Menu : {}", id);
-        return menuRepository.findById(id);
+        return menuRepository.findOneWithEagerRelationships(id);
     }
 
     /**

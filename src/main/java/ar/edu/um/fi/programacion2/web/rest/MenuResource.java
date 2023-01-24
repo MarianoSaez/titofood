@@ -136,12 +136,21 @@ public class MenuResource {
      * {@code GET  /menus} : get all the menus.
      *
      * @param pageable the pagination information.
+     * @param eagerload flag to eager load entities from relationships (This is applicable for many-to-many).
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and the list of menus in body.
      */
     @GetMapping("/menus")
-    public ResponseEntity<List<Menu>> getAllMenus(@org.springdoc.api.annotations.ParameterObject Pageable pageable) {
+    public ResponseEntity<List<Menu>> getAllMenus(
+        @org.springdoc.api.annotations.ParameterObject Pageable pageable,
+        @RequestParam(required = false, defaultValue = "false") boolean eagerload
+    ) {
         log.debug("REST request to get a page of Menus");
-        Page<Menu> page = menuService.findAll(pageable);
+        Page<Menu> page;
+        if (eagerload) {
+            page = menuService.findAllWithEagerRelationships(pageable);
+        } else {
+            page = menuService.findAll(pageable);
+        }
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
     }

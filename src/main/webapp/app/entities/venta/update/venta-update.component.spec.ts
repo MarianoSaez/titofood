@@ -9,8 +9,6 @@ import { of, Subject, from } from 'rxjs';
 import { VentaFormService } from './venta-form.service';
 import { VentaService } from '../service/venta.service';
 import { IVenta } from '../venta.model';
-import { IMenu } from 'app/entities/menu/menu.model';
-import { MenuService } from 'app/entities/menu/service/menu.service';
 
 import { VentaUpdateComponent } from './venta-update.component';
 
@@ -20,7 +18,6 @@ describe('Venta Management Update Component', () => {
   let activatedRoute: ActivatedRoute;
   let ventaFormService: VentaFormService;
   let ventaService: VentaService;
-  let menuService: MenuService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -43,43 +40,17 @@ describe('Venta Management Update Component', () => {
     activatedRoute = TestBed.inject(ActivatedRoute);
     ventaFormService = TestBed.inject(VentaFormService);
     ventaService = TestBed.inject(VentaService);
-    menuService = TestBed.inject(MenuService);
 
     comp = fixture.componentInstance;
   });
 
   describe('ngOnInit', () => {
-    it('Should call Menu query and add missing value', () => {
-      const venta: IVenta = { id: 456 };
-      const menu: IMenu = { id: 4733 };
-      venta.menu = menu;
-
-      const menuCollection: IMenu[] = [{ id: 44100 }];
-      jest.spyOn(menuService, 'query').mockReturnValue(of(new HttpResponse({ body: menuCollection })));
-      const additionalMenus = [menu];
-      const expectedCollection: IMenu[] = [...additionalMenus, ...menuCollection];
-      jest.spyOn(menuService, 'addMenuToCollectionIfMissing').mockReturnValue(expectedCollection);
-
-      activatedRoute.data = of({ venta });
-      comp.ngOnInit();
-
-      expect(menuService.query).toHaveBeenCalled();
-      expect(menuService.addMenuToCollectionIfMissing).toHaveBeenCalledWith(
-        menuCollection,
-        ...additionalMenus.map(expect.objectContaining)
-      );
-      expect(comp.menusSharedCollection).toEqual(expectedCollection);
-    });
-
     it('Should update editForm', () => {
       const venta: IVenta = { id: 456 };
-      const menu: IMenu = { id: 39277 };
-      venta.menu = menu;
 
       activatedRoute.data = of({ venta });
       comp.ngOnInit();
 
-      expect(comp.menusSharedCollection).toContain(menu);
       expect(comp.venta).toEqual(venta);
     });
   });
@@ -149,18 +120,6 @@ describe('Venta Management Update Component', () => {
       expect(ventaService.update).toHaveBeenCalled();
       expect(comp.isSaving).toEqual(false);
       expect(comp.previousState).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('Compare relationships', () => {
-    describe('compareMenu', () => {
-      it('Should forward to menuService', () => {
-        const entity = { id: 123 };
-        const entity2 = { id: 456 };
-        jest.spyOn(menuService, 'compareMenu');
-        comp.compareMenu(entity, entity2);
-        expect(menuService.compareMenu).toHaveBeenCalledWith(entity, entity2);
-      });
     });
   });
 });

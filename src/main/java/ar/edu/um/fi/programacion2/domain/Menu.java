@@ -1,7 +1,6 @@
 package ar.edu.um.fi.programacion2.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,7 +38,6 @@ public class Menu implements Serializable {
     private String urlImagen;
 
     @Column(name = "is_active")
-    @JsonProperty("activo")
     private Boolean isActive;
 
     @Column(name = "foreign_id")
@@ -51,9 +49,10 @@ public class Menu implements Serializable {
     @Column(name = "actualizado")
     private String actualizado;
 
-    @OneToMany(mappedBy = "menu")
+    @ManyToMany
+    @JoinTable(name = "rel_menu__venta", joinColumns = @JoinColumn(name = "menu_id"), inverseJoinColumns = @JoinColumn(name = "venta_id"))
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "menu" }, allowSetters = true)
+    @JsonIgnoreProperties(value = { "menus" }, allowSetters = true)
     private Set<Venta> ventas = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
@@ -180,12 +179,6 @@ public class Menu implements Serializable {
     }
 
     public void setVentas(Set<Venta> ventas) {
-        if (this.ventas != null) {
-            this.ventas.forEach(i -> i.setMenu(null));
-        }
-        if (ventas != null) {
-            ventas.forEach(i -> i.setMenu(this));
-        }
         this.ventas = ventas;
     }
 
@@ -196,13 +189,13 @@ public class Menu implements Serializable {
 
     public Menu addVenta(Venta venta) {
         this.ventas.add(venta);
-        venta.setMenu(this);
+        venta.getMenus().add(this);
         return this;
     }
 
     public Menu removeVenta(Venta venta) {
         this.ventas.remove(venta);
-        venta.setMenu(null);
+        venta.getMenus().remove(this);
         return this;
     }
 

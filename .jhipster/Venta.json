@@ -27,8 +27,9 @@
     {
       "otherEntityName": "menu",
       "otherEntityRelationshipName": "venta",
+      "ownerSide": false,
       "relationshipName": "menu",
-      "relationshipType": "many-to-one"
+      "relationshipType": "many-to-many"
     }
   ],
   "service": "serviceClass"
