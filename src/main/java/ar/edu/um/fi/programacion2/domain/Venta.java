@@ -35,7 +35,7 @@ public class Venta implements Serializable {
     @Column(name = "foreign_id")
     private Double foreignId;
 
-    @ManyToMany(mappedBy = "ventas")
+    @ManyToMany(mappedBy = "ventas", fetch = FetchType.EAGER)
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @JsonIgnoreProperties(value = { "ventas" }, allowSetters = true)
     private Set<Menu> menus = new HashSet<>();

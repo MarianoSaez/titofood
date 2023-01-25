@@ -1,14 +1,17 @@
 package ar.edu.um.fi.programacion2.web.rest;
 
+import ar.edu.um.fi.programacion2.domain.Menu;
 import ar.edu.um.fi.programacion2.domain.Venta;
+import ar.edu.um.fi.programacion2.repository.MenuRepository;
 import ar.edu.um.fi.programacion2.repository.VentaRepository;
+import ar.edu.um.fi.programacion2.service.MenuService;
 import ar.edu.um.fi.programacion2.service.VentaService;
 import ar.edu.um.fi.programacion2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,10 +42,13 @@ public class VentaResource {
 
     private final VentaService ventaService;
 
+    private final MenuService menuService;
+
     private final VentaRepository ventaRepository;
 
-    public VentaResource(VentaService ventaService, VentaRepository ventaRepository) {
+    public VentaResource(VentaService ventaService, MenuService menuService, VentaRepository ventaRepository) {
         this.ventaService = ventaService;
+        this.menuService = menuService;
         this.ventaRepository = ventaRepository;
     }
 
@@ -60,6 +66,7 @@ public class VentaResource {
             throw new BadRequestAlertException("A new venta cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Venta result = ventaService.save(venta);
+        System.out.println("\n" + result + "\n");
         return ResponseEntity
             .created(new URI("/api/ventas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
@@ -69,7 +76,7 @@ public class VentaResource {
     /**
      * {@code PUT  /ventas/:id} : Updates an existing venta.
      *
-     * @param id the id of the venta to save.
+     * @param id    the id of the venta to save.
      * @param venta the venta to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated venta,
      * or with status {@code 400 (Bad Request)} if the venta is not valid,
@@ -101,7 +108,7 @@ public class VentaResource {
     /**
      * {@code PATCH  /ventas/:id} : Partial updates given fields of an existing venta, field will ignore if it is null
      *
-     * @param id the id of the venta to save.
+     * @param id    the id of the venta to save.
      * @param venta the venta to update.
      * @return the {@link ResponseEntity} with status {@code 200 (OK)} and with body the updated venta,
      * or with status {@code 400 (Bad Request)} if the venta is not valid,
@@ -156,6 +163,7 @@ public class VentaResource {
     public ResponseEntity<Venta> getVenta(@PathVariable Long id) {
         log.debug("REST request to get Venta : {}", id);
         Optional<Venta> venta = ventaService.findOne(id);
+        System.out.println("\n" + venta.get().getMenus() + "\n");
         return ResponseUtil.wrapOrNotFound(venta);
     }
 
@@ -173,5 +181,52 @@ public class VentaResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/comprar/")
+    public ResponseEntity<Venta> createCompra(@RequestBody Map<String, List<Long>> body) throws URISyntaxException {
+        Venta venta = new Venta();
+
+        log.debug("REST request to save Venta : {}", venta);
+        if (venta.getId() != null) {
+            throw new BadRequestAlertException("A new venta cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        Set<Menu> listaMenues = new HashSet<>();
+
+        List<Long> menuesRaw = body.get("menu");
+
+        AtomicReference<Float> precioTotal = new AtomicReference<>(0F);
+
+        menuesRaw.forEach(m -> {
+            Menu menu = menuService.findOne(m).get();
+
+            //System.out.println("\n" + menuService.findOne(m).get() + "\n");
+
+            listaMenues.add(menu);
+
+            precioTotal.updateAndGet(v -> v + menu.getPrecio());
+        });
+
+        venta.setMenus(listaMenues);
+
+        venta.setPrecio(precioTotal.get());
+
+        Instant fecha = Instant.now();
+        venta.setFecha(fecha);
+
+        System.out.println("\n" + venta.getId() + "\n" + venta.getFecha() + "\n" + venta.getMenus() + "\n");
+
+        Venta result = ventaService.save(venta); // Guarda el nuevo objeto Venta
+
+        System.out.println("\n" + result.getMenus() + "\n");
+
+        System.out.println("\n" + ventaService.findOne(result.getId()).get().getMenus() + "\n");
+
+        return ResponseEntity
+            .created(new URI("/api/ventas/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+        //return (ResponseEntity<JSONArray>) ResponseEntity.ok().headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()));
+        //return new ResponseEntity<>(HttpStatus.OK);
     }
 }
