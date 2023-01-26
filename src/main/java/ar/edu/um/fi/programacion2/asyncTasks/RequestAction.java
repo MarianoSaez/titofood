@@ -3,8 +3,11 @@ package ar.edu.um.fi.programacion2.asyncTasks;
 import ar.edu.um.fi.programacion2.domain.Menu;
 import ar.edu.um.fi.programacion2.domain.reponseAccion.AbstractResponseAccion;
 import ar.edu.um.fi.programacion2.domain.reponseAccion.MenuReponse;
+import ar.edu.um.fi.programacion2.domain.reponseAccion.ReporteResponse;
 import ar.edu.um.fi.programacion2.service.MenuService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -85,8 +88,47 @@ public class RequestAction {
             List<Menu> l = menuService.updateActiveMenus(menuAccion.getMenus());
             log.info("Menus updated successfully : {}", l);
         } else if (Objects.equals(responseAccion.getAccion(), "reporte")) {
-            // Check the type
+            // Pass the report action to the reports service. It will handle it by itself
+            ReporteResponse reporteAccion = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                //                .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
+                .readValue(serializedResponse, ReporteResponse.class);
+            String jsonReport = new ObjectMapper()
+                .registerModule(new JavaTimeModule())
+                //                .disable(SerializationFeature.WRITE_DURATIONS_AS_TIMESTAMPS)
+                .writeValueAsString(reporteAccion.getReporte());
 
+            log.error("{}", jsonReport);
+
+            URL reporteUrl = new URL("http://127.0.1.1:8081/api/reportes");
+            HttpURLConnection reporteConn = (HttpURLConnection) reporteUrl.openConnection();
+            reporteConn.setRequestMethod("POST");
+            reporteConn.setRequestProperty("Content-Type", "application/json");
+            reporteConn.setRequestProperty("Accept", "application/json");
+            //            con.setRequestProperty(
+            //                "Authorization",
+            //                "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aXRvZm9vZCIsImF1dGgiOiIiLCJleHAiOjE5ODg4MjgwNTR9.4_P9ZyGuNCp8bwdKWsC22MJn4NGlpjJDcvvdg-UEwHhdyAylJ03qnGE6DJh2xdWYeQcnvMkjFgnzRK5sfn9sJQ"
+            //            );
+            reporteConn.setDoOutput(true);
+
+            try (OutputStream os = reporteConn.getOutputStream()) {
+                byte[] input = jsonReport.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            String s;
+
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(reporteConn.getInputStream(), "utf-8"))) {
+                StringBuilder response = new StringBuilder();
+                String responseLine = null;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+
+                s = response.toString();
+            }
+
+            log.error("{}", s);
         }
     }
 }
