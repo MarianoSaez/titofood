@@ -109,3 +109,7 @@ jhipster:
 # ===================================================================
 
 # application:
+test: hola
+franchise-id: 0276c5be-9663-4b8a-aaf4-736db649a2de
+token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpYW5vIiwiYXV0aCI6IiIsImV4cCI6MTk4ODc0MjEyNX0.PBjE_eyl0ssqsodM2NlbVQc2EMgsklcFMC7bRHU3U-omWfuGkkSVG2bfSJZwr8_UQSfUaaQ-stndlAdTjy_8Mg
+url-principal: http://10.101.102.1:8080/api/

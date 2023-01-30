@@ -218,6 +218,13 @@ public class VentaResource {
 
         Venta result = ventaService.save(venta); // Guarda el nuevo objeto Venta
 
+        /*        menuesRaw.forEach(m -> {
+            Menu menu = menuService.findOne(m).get();
+
+            menu.addVenta(ventaService.findOne(result.getId()).get());
+
+        });*/
+
         System.out.println("\n" + result.getMenus() + "\n");
 
         System.out.println("\n" + ventaService.findOne(result.getId()).get().getMenus() + "\n");
