@@ -49,9 +49,10 @@ public class CacheConfiguration {
             createCache(cm, ar.edu.um.fi.programacion2.domain.Authority.class.getName());
             createCache(cm, ar.edu.um.fi.programacion2.domain.User.class.getName() + ".authorities");
             createCache(cm, ar.edu.um.fi.programacion2.domain.Menu.class.getName());
-            createCache(cm, ar.edu.um.fi.programacion2.domain.Menu.class.getName() + ".ventas");
+            createCache(cm, ar.edu.um.fi.programacion2.domain.Menu.class.getName() + ".detalleVentas");
             createCache(cm, ar.edu.um.fi.programacion2.domain.Venta.class.getName());
-            createCache(cm, ar.edu.um.fi.programacion2.domain.Venta.class.getName() + ".menus");
+            createCache(cm, ar.edu.um.fi.programacion2.domain.Venta.class.getName() + ".detalleVentas");
+            createCache(cm, ar.edu.um.fi.programacion2.domain.DetalleVenta.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

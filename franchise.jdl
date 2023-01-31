@@ -12,7 +12,7 @@ application {
     nativeLanguage es
     enableSwaggerCodegen true
   }
-  entities Menu, Venta
+  entities Menu, Venta, DetalleVenta
 }
 
 entity Menu {
@@ -32,10 +32,20 @@ entity Venta {
 	foreignId Double
 }
 
-relationship ManyToMany {
-  Menu to Venta
+entity DetalleVenta {
+    cantidad Integer
+    subtotal Float
 }
+
+relationship OneToMany {
+    Venta to DetalleVenta
+    Menu to DetalleVenta
+}
+
+//relationship ManyToMany {
+//  Venta to Menu
+//}
 
 paginate Menu with infinite-scroll
 paginate Venta with pagination
-service Venta, Menu with serviceClass
+service Venta, Menu, DetalleVenta with serviceClass

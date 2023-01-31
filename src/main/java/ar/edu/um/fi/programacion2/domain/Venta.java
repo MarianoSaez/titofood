@@ -1,8 +1,6 @@
 package ar.edu.um.fi.programacion2.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
@@ -37,10 +35,10 @@ public class Venta implements Serializable {
     @Column(name = "foreign_id")
     private Double foreignId;
 
-    @ManyToMany(mappedBy = "ventas", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "venta")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    @JsonIgnoreProperties(value = { "ventas" }, allowSetters = true)
-    private Set<Menu> menus = new HashSet<>();
+    @JsonIgnoreProperties(value = { "venta", "menu" }, allowSetters = true)
+    private Set<DetalleVenta> detalleVentas = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
 
@@ -96,34 +94,34 @@ public class Venta implements Serializable {
         this.foreignId = foreignId;
     }
 
-    public Set<Menu> getMenus() {
-        return this.menus;
+    public Set<DetalleVenta> getDetalleVentas() {
+        return this.detalleVentas;
     }
 
-    public void setMenus(Set<Menu> menus) {
-        if (this.menus != null) {
-            this.menus.forEach(i -> i.removeVenta(this));
+    public void setDetalleVentas(Set<DetalleVenta> detalleVentas) {
+        if (this.detalleVentas != null) {
+            this.detalleVentas.forEach(i -> i.setVenta(null));
         }
-        if (menus != null) {
-            menus.forEach(i -> i.addVenta(this));
+        if (detalleVentas != null) {
+            detalleVentas.forEach(i -> i.setVenta(this));
         }
-        this.menus = menus;
+        this.detalleVentas = detalleVentas;
     }
 
-    public Venta menus(Set<Menu> menus) {
-        this.setMenus(menus);
+    public Venta detalleVentas(Set<DetalleVenta> detalleVentas) {
+        this.setDetalleVentas(detalleVentas);
         return this;
     }
 
-    public Venta addMenu(Menu menu) {
-        this.menus.add(menu);
-        menu.getVentas().add(this);
+    public Venta addDetalleVenta(DetalleVenta detalleVenta) {
+        this.detalleVentas.add(detalleVenta);
+        detalleVenta.setVenta(this);
         return this;
     }
 
-    public Venta removeMenu(Menu menu) {
-        this.menus.remove(menu);
-        menu.getVentas().remove(this);
+    public Venta removeDetalleVenta(DetalleVenta detalleVenta) {
+        this.detalleVentas.remove(detalleVenta);
+        detalleVenta.setVenta(null);
         return this;
     }
 

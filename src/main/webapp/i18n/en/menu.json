@@ -26,7 +26,7 @@
       "foreignId": "Foreign Id",
       "creado": "Creado",
       "actualizado": "Actualizado",
-      "venta": "Venta"
+      "detalleVenta": "Detalle Venta"
     }
   }
 }

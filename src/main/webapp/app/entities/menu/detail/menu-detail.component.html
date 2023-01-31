@@ -46,13 +46,6 @@
         <dd>
           <span>{{ menu.actualizado }}</span>
         </dd>
-        <dt><span jhiTranslate="franchiseApp.menu.venta">Venta</span></dt>
-        <dd>
-          <span *ngFor="let venta of menu.ventas; let last = last">
-            <a [routerLink]="['/venta', venta.id, 'view']">{{ venta.id }}</a
-            >{{ last ? '' : ', ' }}
-          </span>
-        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

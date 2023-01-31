@@ -1,0 +1,37 @@
+{
+  "applications": ["franchise"],
+  "changelogDate": "20230131042842",
+  "dto": "no",
+  "embedded": false,
+  "entityTableName": "detalle_venta",
+  "fields": [
+    {
+      "fieldName": "cantidad",
+      "fieldType": "Integer"
+    },
+    {
+      "fieldName": "subtotal",
+      "fieldType": "Float"
+    }
+  ],
+  "fluentMethods": true,
+  "jpaMetamodelFiltering": false,
+  "name": "DetalleVenta",
+  "pagination": "no",
+  "readOnly": false,
+  "relationships": [
+    {
+      "otherEntityName": "venta",
+      "otherEntityRelationshipName": "detalleVenta",
+      "relationshipName": "venta",
+      "relationshipType": "many-to-one"
+    },
+    {
+      "otherEntityName": "menu",
+      "otherEntityRelationshipName": "detalleVenta",
+      "relationshipName": "menu",
+      "relationshipType": "many-to-one"
+    }
+  ],
+  "service": "serviceClass"
+}

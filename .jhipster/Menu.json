@@ -45,11 +45,10 @@
   "readOnly": false,
   "relationships": [
     {
-      "otherEntityName": "venta",
+      "otherEntityName": "detalleVenta",
       "otherEntityRelationshipName": "menu",
-      "ownerSide": true,
-      "relationshipName": "venta",
-      "relationshipType": "many-to-many"
+      "relationshipName": "detalleVenta",
+      "relationshipType": "one-to-many"
     }
   ],
   "service": "serviceClass"

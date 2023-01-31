@@ -9,4 +9,9 @@ export const EntityNavbarItems = [
     route: 'venta',
     translationKey: 'global.menu.entities.venta',
   },
+  {
+    name: 'DetalleVenta',
+    route: 'detalle-venta',
+    translationKey: 'global.menu.entities.detalleVenta',
+  },
 ];

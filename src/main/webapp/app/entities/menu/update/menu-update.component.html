@@ -66,21 +66,6 @@
             formControlName="actualizado"
           />
         </div>
-
-        <div class="row mb-3">
-          <label jhiTranslate="franchiseApp.menu.venta" for="field_ventas">Venta</label>
-          <select
-            class="form-control"
-            id="field_ventas"
-            data-cy="venta"
-            multiple
-            name="ventas"
-            formControlName="ventas"
-            [compareWith]="compareVenta"
-          >
-            <option [ngValue]="ventaOption" *ngFor="let ventaOption of ventasSharedCollection">{{ ventaOption.id }}</option>
-          </select>
-        </div>
       </div>
 
       <div>

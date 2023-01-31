@@ -21,7 +21,7 @@
       "fecha": "Fecha",
       "precio": "Precio",
       "foreignId": "Foreign Id",
-      "menu": "Menu"
+      "detalleVenta": "Detalle Venta"
     }
   }
 }

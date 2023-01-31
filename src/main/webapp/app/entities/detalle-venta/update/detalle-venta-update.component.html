@@ -1,0 +1,64 @@
+<div class="d-flex justify-content-center">
+  <div class="col-8">
+    <form name="editForm" role="form" novalidate (ngSubmit)="save()" [formGroup]="editForm">
+      <h2
+        id="jhi-detalle-venta-heading"
+        data-cy="DetalleVentaCreateUpdateHeading"
+        jhiTranslate="franchiseApp.detalleVenta.home.createOrEditLabel"
+      >
+        Crear o editar Detalle Venta
+      </h2>
+
+      <div>
+        <jhi-alert-error></jhi-alert-error>
+
+        <div class="row mb-3" *ngIf="editForm.controls.id.value !== null">
+          <label class="form-label" jhiTranslate="global.field.id" for="field_id">ID</label>
+          <input type="number" class="form-control" name="id" id="field_id" data-cy="id" formControlName="id" [readonly]="true" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="franchiseApp.detalleVenta.cantidad" for="field_cantidad">Cantidad</label>
+          <input type="number" class="form-control" name="cantidad" id="field_cantidad" data-cy="cantidad" formControlName="cantidad" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="franchiseApp.detalleVenta.subtotal" for="field_subtotal">Subtotal</label>
+          <input type="number" class="form-control" name="subtotal" id="field_subtotal" data-cy="subtotal" formControlName="subtotal" />
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="franchiseApp.detalleVenta.venta" for="field_venta">Venta</label>
+          <select class="form-control" id="field_venta" data-cy="venta" name="venta" formControlName="venta" [compareWith]="compareVenta">
+            <option [ngValue]="null"></option>
+            <option [ngValue]="ventaOption" *ngFor="let ventaOption of ventasSharedCollection">{{ ventaOption.id }}</option>
+          </select>
+        </div>
+
+        <div class="row mb-3">
+          <label class="form-label" jhiTranslate="franchiseApp.detalleVenta.menu" for="field_menu">Menu</label>
+          <select class="form-control" id="field_menu" data-cy="menu" name="menu" formControlName="menu" [compareWith]="compareMenu">
+            <option [ngValue]="null"></option>
+            <option [ngValue]="menuOption" *ngFor="let menuOption of menusSharedCollection">{{ menuOption.id }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div>
+        <button type="button" id="cancel-save" data-cy="entityCreateCancelButton" class="btn btn-secondary" (click)="previousState()">
+          <fa-icon icon="ban"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancelar</span>
+        </button>
+
+        <button
+          type="submit"
+          id="save-entity"
+          data-cy="entityCreateSaveButton"
+          [disabled]="editForm.invalid || isSaving"
+          class="btn btn-primary"
+        >
+          <fa-icon icon="save"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Guardar</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

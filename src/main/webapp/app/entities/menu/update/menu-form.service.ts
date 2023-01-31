@@ -14,7 +14,7 @@ type PartialWithRequiredKeyOf<T extends { id: unknown }> = Partial<Omit<T, 'id'>
  */
 type MenuFormGroupInput = IMenu | PartialWithRequiredKeyOf<NewMenu>;
 
-type MenuFormDefaults = Pick<NewMenu, 'id' | 'isActive' | 'ventas'>;
+type MenuFormDefaults = Pick<NewMenu, 'id' | 'isActive'>;
 
 type MenuFormGroupContent = {
   id: FormControl<IMenu['id'] | NewMenu['id']>;
@@ -26,7 +26,6 @@ type MenuFormGroupContent = {
   foreignId: FormControl<IMenu['foreignId']>;
   creado: FormControl<IMenu['creado']>;
   actualizado: FormControl<IMenu['actualizado']>;
-  ventas: FormControl<IMenu['ventas']>;
 };
 
 export type MenuFormGroup = FormGroup<MenuFormGroupContent>;
@@ -54,7 +53,6 @@ export class MenuFormService {
       foreignId: new FormControl(menuRawValue.foreignId),
       creado: new FormControl(menuRawValue.creado),
       actualizado: new FormControl(menuRawValue.actualizado),
-      ventas: new FormControl(menuRawValue.ventas ?? []),
     });
   }
 
@@ -76,7 +74,6 @@ export class MenuFormService {
     return {
       id: null,
       isActive: false,
-      ventas: [],
     };
   }
 }

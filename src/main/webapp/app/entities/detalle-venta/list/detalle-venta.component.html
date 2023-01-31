@@ -1,0 +1,117 @@
+<div>
+  <h2 id="page-heading" data-cy="DetalleVentaHeading">
+    <span jhiTranslate="franchiseApp.detalleVenta.home.title">Detalle Ventas</span>
+
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-info me-2" (click)="load()" [disabled]="isLoading">
+        <fa-icon icon="sync" [spin]="isLoading"></fa-icon>
+        <span jhiTranslate="franchiseApp.detalleVenta.home.refreshListLabel">Refrescar lista</span>
+      </button>
+
+      <button
+        id="jh-create-entity"
+        data-cy="entityCreateButton"
+        class="btn btn-primary jh-create-entity create-detalle-venta"
+        [routerLink]="['/detalle-venta/new']"
+      >
+        <fa-icon icon="plus"></fa-icon>
+        <span jhiTranslate="franchiseApp.detalleVenta.home.createLabel"> Crear nuevo Detalle Venta </span>
+      </button>
+    </div>
+  </h2>
+
+  <jhi-alert-error></jhi-alert-error>
+
+  <jhi-alert></jhi-alert>
+
+  <div class="alert alert-warning" id="no-result" *ngIf="detalleVentas?.length === 0">
+    <span jhiTranslate="franchiseApp.detalleVenta.home.notFound">Ningún Detalle Ventas encontrado</span>
+  </div>
+
+  <div class="table-responsive table-entities" id="entities" *ngIf="detalleVentas && detalleVentas.length > 0">
+    <table class="table table-striped" aria-describedby="page-heading">
+      <thead>
+        <tr jhiSort [(predicate)]="predicate" [(ascending)]="ascending" (sortChange)="navigateToWithComponentValues()">
+          <th scope="col" jhiSortBy="id">
+            <div class="d-flex">
+              <span jhiTranslate="global.field.id">ID</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="cantidad">
+            <div class="d-flex">
+              <span jhiTranslate="franchiseApp.detalleVenta.cantidad">Cantidad</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="subtotal">
+            <div class="d-flex">
+              <span jhiTranslate="franchiseApp.detalleVenta.subtotal">Subtotal</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="venta.id">
+            <div class="d-flex">
+              <span jhiTranslate="franchiseApp.detalleVenta.venta">Venta</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col" jhiSortBy="menu.id">
+            <div class="d-flex">
+              <span jhiTranslate="franchiseApp.detalleVenta.menu">Menu</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let detalleVenta of detalleVentas; trackBy: trackId" data-cy="entityTable">
+          <td>
+            <a [routerLink]="['/detalle-venta', detalleVenta.id, 'view']">{{ detalleVenta.id }}</a>
+          </td>
+          <td>{{ detalleVenta.cantidad }}</td>
+          <td>{{ detalleVenta.subtotal }}</td>
+          <td>
+            <div *ngIf="detalleVenta.venta">
+              <a [routerLink]="['/venta', detalleVenta.venta.id, 'view']">{{ detalleVenta.venta.id }}</a>
+            </div>
+          </td>
+          <td>
+            <div *ngIf="detalleVenta.menu">
+              <a [routerLink]="['/menu', detalleVenta.menu.id, 'view']">{{ detalleVenta.menu.id }}</a>
+            </div>
+          </td>
+          <td class="text-end">
+            <div class="btn-group">
+              <button
+                type="submit"
+                [routerLink]="['/detalle-venta', detalleVenta.id, 'view']"
+                class="btn btn-info btn-sm"
+                data-cy="entityDetailsButton"
+              >
+                <fa-icon icon="eye"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.view">Vista</span>
+              </button>
+
+              <button
+                type="submit"
+                [routerLink]="['/detalle-venta', detalleVenta.id, 'edit']"
+                class="btn btn-primary btn-sm"
+                data-cy="entityEditButton"
+              >
+                <fa-icon icon="pencil-alt"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Editar</span>
+              </button>
+
+              <button type="submit" (click)="delete(detalleVenta)" class="btn btn-danger btn-sm" data-cy="entityDeleteButton">
+                <fa-icon icon="times"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Eliminar</span>
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
