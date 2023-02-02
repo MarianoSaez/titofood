@@ -1,14 +1,19 @@
 package ar.edu.um.fi.programacion2.web.rest;
 
+import ar.edu.um.fi.programacion2.domain.DetalleVenta;
+import ar.edu.um.fi.programacion2.domain.Menu;
 import ar.edu.um.fi.programacion2.domain.Venta;
+import ar.edu.um.fi.programacion2.repository.MenuRepository;
 import ar.edu.um.fi.programacion2.repository.VentaRepository;
+import ar.edu.um.fi.programacion2.service.DetalleVentaService;
+import ar.edu.um.fi.programacion2.service.MenuService;
 import ar.edu.um.fi.programacion2.service.VentaService;
 import ar.edu.um.fi.programacion2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,9 +46,20 @@ public class VentaResource {
 
     private final VentaRepository ventaRepository;
 
-    public VentaResource(VentaService ventaService, VentaRepository ventaRepository) {
+    private final MenuService menuService;
+
+    private final DetalleVentaService detalleVentaService;
+
+    public VentaResource(
+        VentaService ventaService,
+        VentaRepository ventaRepository,
+        MenuService menuService,
+        DetalleVentaService detalleVentaService
+    ) {
         this.ventaService = ventaService;
         this.ventaRepository = ventaRepository;
+        this.menuService = menuService;
+        this.detalleVentaService = detalleVentaService;
     }
 
     /**
@@ -173,5 +189,57 @@ public class VentaResource {
             .noContent()
             .headers(HeaderUtil.createEntityDeletionAlert(applicationName, true, ENTITY_NAME, id.toString()))
             .build();
+    }
+
+    @PostMapping("/comprar/")
+    public ResponseEntity<Venta> createCompra(@RequestBody Map<String, List<Long>> body) throws URISyntaxException {
+        Venta venta = new Venta();
+        log.debug("REST request to save Venta : {}", venta);
+        if (venta.getId() != null) {
+            throw new BadRequestAlertException("A new venta cannot already have an ID", ENTITY_NAME, "idexists");
+        }
+        Set<Long> listaMenues = new HashSet<>();
+        HashMap menuesCantidad = new HashMap();
+        List<Long> menuesRaw = body.get("menu");
+        AtomicReference<Float> precioTotal = new AtomicReference<>(0F);
+
+        menuesRaw.forEach(m -> {
+            Menu menu = menuService.findOne(m).get();
+            precioTotal.updateAndGet(v -> v + menu.getPrecio());
+        });
+
+        venta.setPrecio(precioTotal.get());
+        Instant fecha = Instant.now();
+        venta.setFecha(fecha);
+
+        Venta result = ventaService.save(venta); // Guarda el nuevo objeto Venta
+        menuesRaw.forEach(m -> {
+            listaMenues.add(m);
+        });
+
+        listaMenues.forEach(m -> {
+            DetalleVenta detalleVenta = new DetalleVenta();
+
+            Menu menu = menuService.findOne(m).get();
+
+            int cantidad = Collections.frequency(menuesRaw, m);
+            detalleVenta.setCantidad(cantidad);
+
+            Venta venta1 = ventaService.findOne(result.getId()).get();
+            detalleVenta.setSubtotal(menu.getPrecio() * cantidad);
+
+            detalleVenta.setMenu(menu);
+
+            detalleVenta.setVenta(venta1);
+
+            DetalleVenta resultado = detalleVentaService.save(detalleVenta);
+        });
+
+        return ResponseEntity
+            .created(new URI("/api/ventas/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
+            .body(result);
+        //return (ResponseEntity<JSONArray>) ResponseEntity.ok().headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()));
+        //return new ResponseEntity<>(HttpStatus.OK);
     }
 }
