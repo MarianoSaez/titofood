@@ -52,13 +52,13 @@ public class RequestAction {
         con.setRequestProperty("Accept", "application/json");
         con.setRequestProperty(
             "Authorization",
-            "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aXRvZm9vZCIsImF1dGgiOiIiLCJleHAiOjE5ODg4MjgwNTR9.4_P9ZyGuNCp8bwdKWsC22MJn4NGlpjJDcvvdg-UEwHhdyAylJ03qnGE6DJh2xdWYeQcnvMkjFgnzRK5sfn9sJQ"
+            "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aXRvZm9vZCIsImF1dGgiOiIiLCJleHAiOjE5OTI3NzAwMjN9.j8neTNht5GBgeYurRPyKSGsIYfQ2n5wUgdlTl9NvL_8pAJkZqd_OSenoCals2M79wCb9Nu4vvBhgtkUeEInKWw"
         );
         con.setDoOutput(true);
         con.setConnectTimeout(50000);
         con.setReadTimeout(50000);
 
-        String jsonInputString = "{\"accion\": \"consulta\", \"franquiciaID\": \"0276c5be-9663-4b8a-aaf4-736db649a2de\"}";
+        String jsonInputString = "{\"accion\": \"consulta\", \"franquiciaID\": \"40e8be94-6bb4-4bd7-a81a-14a82167de5e\"}";
 
         try (OutputStream os = con.getOutputStream()) {
             byte[] input = jsonInputString.getBytes("utf-8");

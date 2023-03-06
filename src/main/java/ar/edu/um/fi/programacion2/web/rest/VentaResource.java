@@ -8,17 +8,21 @@ import ar.edu.um.fi.programacion2.repository.VentaRepository;
 import ar.edu.um.fi.programacion2.service.DetalleVentaService;
 import ar.edu.um.fi.programacion2.service.MenuService;
 import ar.edu.um.fi.programacion2.service.VentaService;
+import ar.edu.um.fi.programacion2.web.rest.dto.VentaForReporteDTO;
 import ar.edu.um.fi.programacion2.web.rest.errors.BadRequestAlertException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -160,6 +164,24 @@ public class VentaResource {
         Page<Venta> page = ventaService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), page);
         return ResponseEntity.ok().headers(headers).body(page.getContent());
+    }
+
+    /**
+     * @code GET /ventas/:fechaInicio/:fechaFin
+     *
+     * @param fechaInicio the starting date for query
+     * @param fechaFin the ending date for query
+     * @return the list of sales between those dates
+     * */
+    @GetMapping("/ventas/{fechaInicio}/{fechaFin}")
+    public ResponseEntity<List<VentaForReporteDTO>> getVentasbetweenDates(@PathVariable String fechaInicio, @PathVariable String fechaFin) {
+        List<VentaForReporteDTO> ventas = ventaService
+            .findBetweenDate(LocalDateTime.parse(fechaInicio), LocalDateTime.parse(fechaFin))
+            .stream()
+            .map(VentaForReporteDTO::new)
+            .collect(Collectors.toList());
+
+        return ResponseEntity.ok().body(ventas);
     }
 
     /**
