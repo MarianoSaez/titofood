@@ -14,8 +14,9 @@ public class ReporteDTO {
     private ZonedDateTime fechaFin;
     private String intervalo;
 
-    @JsonProperty("id")
     private Long foreignId;
+
+    private Long reporteCanceladoId;
 
     public ReporteDTO() {}
 
@@ -27,10 +28,20 @@ public class ReporteDTO {
     //        this.id = id;
     //    }
 
+    public Long getReporteCanceladoId() {
+        return reporteCanceladoId;
+    }
+
+    public void setReporteCanceladoId(Long reporteCanceladoId) {
+        this.reporteCanceladoId = reporteCanceladoId;
+    }
+
+    @JsonProperty("foreignId")
     public Long getForeignId() {
         return foreignId;
     }
 
+    @JsonProperty("id")
     public void setForeignId(Long foreignId) {
         this.foreignId = foreignId;
     }

@@ -2,6 +2,10 @@ package ar.edu.um.fi.programacion2.service;
 
 import ar.edu.um.fi.programacion2.domain.Venta;
 import ar.edu.um.fi.programacion2.repository.VentaRepository;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.util.List;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +27,14 @@ public class VentaService {
 
     public VentaService(VentaRepository ventaRepository) {
         this.ventaRepository = ventaRepository;
+    }
+
+    public List<Venta> findBetweenDate(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
+        List<Venta> ventas = ventaRepository.findAllByFechaBetween(
+            fechaInicio.toInstant(ZoneOffset.UTC),
+            fechaFin.toInstant(ZoneOffset.UTC)
+        );
+        return ventas;
     }
 
     /**
