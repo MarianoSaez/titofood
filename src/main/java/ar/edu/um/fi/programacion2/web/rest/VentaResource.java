@@ -232,14 +232,12 @@ public class VentaResource {
 
             detalleVenta.setVenta(venta1);
 
-            DetalleVenta resultado = detalleVentaService.save(detalleVenta);
+            detalleVentaService.save(detalleVenta);
         });
 
         return ResponseEntity
             .created(new URI("/api/ventas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
             .body(result);
-        //return (ResponseEntity<JSONArray>) ResponseEntity.ok().headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()));
-        //return new ResponseEntity<>(HttpStatus.OK);
     }
 }
