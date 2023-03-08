@@ -2,7 +2,6 @@ package ar.edu.um.fi.programacion2.service;
 
 import ar.edu.um.fi.programacion2.domain.Venta;
 import ar.edu.um.fi.programacion2.repository.VentaRepository;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -79,6 +78,9 @@ public class VentaService {
                 }
                 if (venta.getForeignId() != null) {
                     existingVenta.setForeignId(venta.getForeignId());
+                }
+                if (venta.getCodigoSeguimiento() != null) {
+                    existingVenta.setCodigoSeguimiento(venta.getCodigoSeguimiento());
                 }
 
                 return existingVenta;

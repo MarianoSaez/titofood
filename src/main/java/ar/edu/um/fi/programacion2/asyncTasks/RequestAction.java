@@ -105,10 +105,10 @@ public class RequestAction {
             reporteConn.setRequestMethod("POST");
             reporteConn.setRequestProperty("Content-Type", "application/json");
             reporteConn.setRequestProperty("Accept", "application/json");
-            //            con.setRequestProperty(
-            //                "Authorization",
-            //                "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aXRvZm9vZCIsImF1dGgiOiIiLCJleHAiOjE5ODg4MjgwNTR9.4_P9ZyGuNCp8bwdKWsC22MJn4NGlpjJDcvvdg-UEwHhdyAylJ03qnGE6DJh2xdWYeQcnvMkjFgnzRK5sfn9sJQ"
-            //            );
+            reporteConn.setRequestProperty(
+                "Authorization",
+                "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJmcmFucXVpY2lhIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY3ODI4NDczNX0.CijB_KMB6sazYXwN7Wm-DEjN2Wrvt23OoLNPBLhfY5wT0BiCBb0FVGL7lmGulfeKCmOKoLfvQFouZYBhT7yHqg"
+            );
             reporteConn.setDoOutput(true);
 
             try (OutputStream os = reporteConn.getOutputStream()) {

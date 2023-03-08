@@ -21,6 +21,7 @@
       "fecha": "Fecha",
       "precio": "Precio",
       "foreignId": "Foreign Id",
+      "codigoSeguimiento": "Codigo Seguimiento",
       "detalleVenta": "Detalle Venta"
     }
   }

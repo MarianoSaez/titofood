@@ -26,6 +26,10 @@
         <dd>
           <span>{{ venta.foreignId }}</span>
         </dd>
+        <dt><span jhiTranslate="franchiseApp.venta.codigoSeguimiento">Codigo Seguimiento</span></dt>
+        <dd>
+          <span>{{ venta.codigoSeguimiento }}</span>
+        </dd>
       </dl>
 
       <button type="submit" (click)="previousState()" class="btn btn-info" data-cy="entityDetailsBackButton">

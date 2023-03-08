@@ -5,6 +5,7 @@ export interface IVenta {
   fecha?: dayjs.Dayjs | null;
   precio?: number | null;
   foreignId?: number | null;
+  codigoSeguimiento?: string | null;
 }
 
 export type NewVenta = Omit<IVenta, 'id'> & { id: null };

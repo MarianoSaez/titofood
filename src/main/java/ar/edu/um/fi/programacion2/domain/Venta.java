@@ -5,9 +5,11 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 import javax.persistence.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 
 /**
  * A Venta.
@@ -34,6 +36,10 @@ public class Venta implements Serializable {
 
     @Column(name = "foreign_id")
     private Double foreignId;
+
+    @Type(type = "uuid-char")
+    @Column(name = "codigo_seguimiento", length = 36)
+    private UUID codigoSeguimiento;
 
     @OneToMany(mappedBy = "venta")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -94,6 +100,19 @@ public class Venta implements Serializable {
         this.foreignId = foreignId;
     }
 
+    public UUID getCodigoSeguimiento() {
+        return this.codigoSeguimiento;
+    }
+
+    public Venta codigoSeguimiento(UUID codigoSeguimiento) {
+        this.setCodigoSeguimiento(codigoSeguimiento);
+        return this;
+    }
+
+    public void setCodigoSeguimiento(UUID codigoSeguimiento) {
+        this.codigoSeguimiento = codigoSeguimiento;
+    }
+
     public Set<DetalleVenta> getDetalleVentas() {
         return this.detalleVentas;
     }
@@ -152,6 +171,7 @@ public class Venta implements Serializable {
             ", fecha='" + getFecha() + "'" +
             ", precio=" + getPrecio() +
             ", foreignId=" + getForeignId() +
+            ", codigoSeguimiento='" + getCodigoSeguimiento() + "'" +
             "}";
     }
 }

@@ -12,6 +12,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
 import javax.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +41,9 @@ class VentaResourceIT {
     private static final Double DEFAULT_FOREIGN_ID = 1D;
     private static final Double UPDATED_FOREIGN_ID = 2D;
 
+    private static final UUID DEFAULT_CODIGO_SEGUIMIENTO = UUID.randomUUID();
+    private static final UUID UPDATED_CODIGO_SEGUIMIENTO = UUID.randomUUID();
+
     private static final String ENTITY_API_URL = "/api/ventas";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -64,7 +68,11 @@ class VentaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Venta createEntity(EntityManager em) {
-        Venta venta = new Venta().fecha(DEFAULT_FECHA).precio(DEFAULT_PRECIO).foreignId(DEFAULT_FOREIGN_ID);
+        Venta venta = new Venta()
+            .fecha(DEFAULT_FECHA)
+            .precio(DEFAULT_PRECIO)
+            .foreignId(DEFAULT_FOREIGN_ID)
+            .codigoSeguimiento(DEFAULT_CODIGO_SEGUIMIENTO);
         return venta;
     }
 
@@ -75,7 +83,11 @@ class VentaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Venta createUpdatedEntity(EntityManager em) {
-        Venta venta = new Venta().fecha(UPDATED_FECHA).precio(UPDATED_PRECIO).foreignId(UPDATED_FOREIGN_ID);
+        Venta venta = new Venta()
+            .fecha(UPDATED_FECHA)
+            .precio(UPDATED_PRECIO)
+            .foreignId(UPDATED_FOREIGN_ID)
+            .codigoSeguimiento(UPDATED_CODIGO_SEGUIMIENTO);
         return venta;
     }
 
@@ -100,6 +112,7 @@ class VentaResourceIT {
         assertThat(testVenta.getFecha()).isEqualTo(DEFAULT_FECHA);
         assertThat(testVenta.getPrecio()).isEqualTo(DEFAULT_PRECIO);
         assertThat(testVenta.getForeignId()).isEqualTo(DEFAULT_FOREIGN_ID);
+        assertThat(testVenta.getCodigoSeguimiento()).isEqualTo(DEFAULT_CODIGO_SEGUIMIENTO);
     }
 
     @Test
@@ -134,7 +147,8 @@ class VentaResourceIT {
             .andExpect(jsonPath("$.[*].id").value(hasItem(venta.getId().intValue())))
             .andExpect(jsonPath("$.[*].fecha").value(hasItem(DEFAULT_FECHA.toString())))
             .andExpect(jsonPath("$.[*].precio").value(hasItem(DEFAULT_PRECIO.doubleValue())))
-            .andExpect(jsonPath("$.[*].foreignId").value(hasItem(DEFAULT_FOREIGN_ID.doubleValue())));
+            .andExpect(jsonPath("$.[*].foreignId").value(hasItem(DEFAULT_FOREIGN_ID.doubleValue())))
+            .andExpect(jsonPath("$.[*].codigoSeguimiento").value(hasItem(DEFAULT_CODIGO_SEGUIMIENTO.toString())));
     }
 
     @Test
@@ -151,7 +165,8 @@ class VentaResourceIT {
             .andExpect(jsonPath("$.id").value(venta.getId().intValue()))
             .andExpect(jsonPath("$.fecha").value(DEFAULT_FECHA.toString()))
             .andExpect(jsonPath("$.precio").value(DEFAULT_PRECIO.doubleValue()))
-            .andExpect(jsonPath("$.foreignId").value(DEFAULT_FOREIGN_ID.doubleValue()));
+            .andExpect(jsonPath("$.foreignId").value(DEFAULT_FOREIGN_ID.doubleValue()))
+            .andExpect(jsonPath("$.codigoSeguimiento").value(DEFAULT_CODIGO_SEGUIMIENTO.toString()));
     }
 
     @Test
@@ -173,7 +188,11 @@ class VentaResourceIT {
         Venta updatedVenta = ventaRepository.findById(venta.getId()).get();
         // Disconnect from session so that the updates on updatedVenta are not directly saved in db
         em.detach(updatedVenta);
-        updatedVenta.fecha(UPDATED_FECHA).precio(UPDATED_PRECIO).foreignId(UPDATED_FOREIGN_ID);
+        updatedVenta
+            .fecha(UPDATED_FECHA)
+            .precio(UPDATED_PRECIO)
+            .foreignId(UPDATED_FOREIGN_ID)
+            .codigoSeguimiento(UPDATED_CODIGO_SEGUIMIENTO);
 
         restVentaMockMvc
             .perform(
@@ -190,6 +209,7 @@ class VentaResourceIT {
         assertThat(testVenta.getFecha()).isEqualTo(UPDATED_FECHA);
         assertThat(testVenta.getPrecio()).isEqualTo(UPDATED_PRECIO);
         assertThat(testVenta.getForeignId()).isEqualTo(UPDATED_FOREIGN_ID);
+        assertThat(testVenta.getCodigoSeguimiento()).isEqualTo(UPDATED_CODIGO_SEGUIMIENTO);
     }
 
     @Test
@@ -260,7 +280,7 @@ class VentaResourceIT {
         Venta partialUpdatedVenta = new Venta();
         partialUpdatedVenta.setId(venta.getId());
 
-        partialUpdatedVenta.precio(UPDATED_PRECIO);
+        partialUpdatedVenta.precio(UPDATED_PRECIO).codigoSeguimiento(UPDATED_CODIGO_SEGUIMIENTO);
 
         restVentaMockMvc
             .perform(
@@ -277,6 +297,7 @@ class VentaResourceIT {
         assertThat(testVenta.getFecha()).isEqualTo(DEFAULT_FECHA);
         assertThat(testVenta.getPrecio()).isEqualTo(UPDATED_PRECIO);
         assertThat(testVenta.getForeignId()).isEqualTo(DEFAULT_FOREIGN_ID);
+        assertThat(testVenta.getCodigoSeguimiento()).isEqualTo(UPDATED_CODIGO_SEGUIMIENTO);
     }
 
     @Test
@@ -291,7 +312,11 @@ class VentaResourceIT {
         Venta partialUpdatedVenta = new Venta();
         partialUpdatedVenta.setId(venta.getId());
 
-        partialUpdatedVenta.fecha(UPDATED_FECHA).precio(UPDATED_PRECIO).foreignId(UPDATED_FOREIGN_ID);
+        partialUpdatedVenta
+            .fecha(UPDATED_FECHA)
+            .precio(UPDATED_PRECIO)
+            .foreignId(UPDATED_FOREIGN_ID)
+            .codigoSeguimiento(UPDATED_CODIGO_SEGUIMIENTO);
 
         restVentaMockMvc
             .perform(
@@ -308,6 +333,7 @@ class VentaResourceIT {
         assertThat(testVenta.getFecha()).isEqualTo(UPDATED_FECHA);
         assertThat(testVenta.getPrecio()).isEqualTo(UPDATED_PRECIO);
         assertThat(testVenta.getForeignId()).isEqualTo(UPDATED_FOREIGN_ID);
+        assertThat(testVenta.getCodigoSeguimiento()).isEqualTo(UPDATED_CODIGO_SEGUIMIENTO);
     }
 
     @Test
