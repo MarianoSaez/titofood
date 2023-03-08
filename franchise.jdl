@@ -30,6 +30,7 @@ entity Venta {
 	fecha Instant
     precio Float
 	foreignId Double
+	codigoSeguimiento UUID
 }
 
 entity DetalleVenta {

@@ -16,6 +16,10 @@
     {
       "fieldName": "foreignId",
       "fieldType": "Double"
+    },
+    {
+      "fieldName": "codigoSeguimiento",
+      "fieldType": "UUID"
     }
   ],
   "fluentMethods": true,
