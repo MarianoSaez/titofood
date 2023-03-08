@@ -43,6 +43,7 @@ management:
             'threaddump',
             'caches',
             'liquibase',
+            'beans',
           ]
   endpoint:
     health:

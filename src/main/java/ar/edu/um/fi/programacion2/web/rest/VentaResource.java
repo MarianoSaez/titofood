@@ -17,9 +17,12 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import javax.persistence.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.configurationprocessor.json.JSONArray;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -214,20 +217,20 @@ public class VentaResource {
     }
 
     @PostMapping("/comprar/")
-    public ResponseEntity<Venta> createCompra(@RequestBody Map<String, List<Long>> body) throws URISyntaxException {
+    public ResponseEntity<String> createCompra(@RequestBody Map<String, List<Map<String, Long>>> body) throws URISyntaxException {
         Venta venta = new Venta();
         log.debug("REST request to save Venta : {}", venta);
         if (venta.getId() != null) {
             throw new BadRequestAlertException("A new venta cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        Set<Long> listaMenues = new HashSet<>();
-        HashMap menuesCantidad = new HashMap();
-        List<Long> menuesRaw = body.get("menu");
+
+        List<Map<String, Long>> menuesRaw = body.get("menues");
         AtomicReference<Float> precioTotal = new AtomicReference<>(0F);
 
-        menuesRaw.forEach(m -> {
-            Menu menu = menuService.findOne(m).get();
-            precioTotal.updateAndGet(v -> v + menu.getPrecio());
+        menuesRaw.forEach(m -> { //Obtener el precio total de la venta
+            Menu menu = menuService.findOne(m.get("menu")).get();
+            precioTotal.updateAndGet(v -> v + menu.getPrecio() * m.get("cantidad"));
+            System.out.println("\n" + m.get("cantidad").getClass() + "\n");
         });
 
         venta.setPrecio(precioTotal.get());
@@ -235,33 +238,28 @@ public class VentaResource {
         venta.setFecha(fecha);
 
         Venta result = ventaService.save(venta); // Guarda el nuevo objeto Venta
-        menuesRaw.forEach(m -> {
-            listaMenues.add(m);
-        });
 
-        listaMenues.forEach(m -> {
+        menuesRaw.forEach(m -> {
             DetalleVenta detalleVenta = new DetalleVenta();
 
-            Menu menu = menuService.findOne(m).get();
+            Menu menu = menuService.findOne(m.get("menu")).get();
 
-            int cantidad = Collections.frequency(menuesRaw, m);
-            detalleVenta.setCantidad(cantidad);
+            Venta ventaAux = ventaService.findOne(result.getId()).get();
 
-            Venta venta1 = ventaService.findOne(result.getId()).get();
-            detalleVenta.setSubtotal(menu.getPrecio() * cantidad);
+            detalleVenta.setCantidad(Math.toIntExact(m.get("cantidad")));
+
+            detalleVenta.setSubtotal(menu.getPrecio() * m.get("cantidad"));
 
             detalleVenta.setMenu(menu);
 
-            detalleVenta.setVenta(venta1);
+            detalleVenta.setVenta(ventaAux);
 
-            DetalleVenta resultado = detalleVentaService.save(detalleVenta);
+            detalleVentaService.save(detalleVenta);
         });
 
         return ResponseEntity
             .created(new URI("/api/ventas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body(result);
-        //return (ResponseEntity<JSONArray>) ResponseEntity.ok().headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()));
-        //return new ResponseEntity<>(HttpStatus.OK);
+            .body("result");
     }
 }

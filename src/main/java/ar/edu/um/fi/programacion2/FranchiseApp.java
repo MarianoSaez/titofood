@@ -2,6 +2,7 @@ package ar.edu.um.fi.programacion2;
 
 import ar.edu.um.fi.programacion2.config.ApplicationProperties;
 import ar.edu.um.fi.programacion2.config.CRLFLogConverter;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -15,6 +16,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
 import tech.jhipster.config.DefaultProfileUtil;
 import tech.jhipster.config.JHipsterConstants;
@@ -64,11 +66,11 @@ public class FranchiseApp {
      *
      * @param args the command line arguments.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         SpringApplication app = new SpringApplication(FranchiseApp.class);
         DefaultProfileUtil.addDefaultProfile(app);
-        Environment env = app.run(args).getEnvironment();
-        logApplicationStartup(env);
+        ConfigurableApplicationContext context = app.run(args);
+        logApplicationStartup(context.getEnvironment());
     }
 
     private static void logApplicationStartup(Environment env) {
