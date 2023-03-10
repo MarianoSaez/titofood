@@ -50,6 +50,12 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
+          <th scope="col" jhiSortBy="foreignId">
+            <div class="d-flex">
+              <span jhiTranslate="franchiseApp.detalleVenta.foreignId">Foreign Id</span>
+              <fa-icon class="p-1" icon="sort"></fa-icon>
+            </div>
+          </th>
           <th scope="col" jhiSortBy="venta.id">
             <div class="d-flex">
               <span jhiTranslate="franchiseApp.detalleVenta.venta">Venta</span>
@@ -72,6 +78,7 @@
           </td>
           <td>{{ detalleVenta.cantidad }}</td>
           <td>{{ detalleVenta.subtotal }}</td>
+          <td>{{ detalleVenta.foreignId }}</td>
           <td>
             <div *ngIf="detalleVenta.venta">
               <a [routerLink]="['/venta', detalleVenta.venta.id, 'view']">{{ detalleVenta.venta.id }}</a>

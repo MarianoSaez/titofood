@@ -76,9 +76,6 @@ public class VentaService {
                 if (venta.getPrecio() != null) {
                     existingVenta.setPrecio(venta.getPrecio());
                 }
-                if (venta.getForeignId() != null) {
-                    existingVenta.setForeignId(venta.getForeignId());
-                }
                 if (venta.getCodigoSeguimiento() != null) {
                     existingVenta.setCodigoSeguimiento(venta.getCodigoSeguimiento());
                 }

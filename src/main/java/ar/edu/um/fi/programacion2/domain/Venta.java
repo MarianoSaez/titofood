@@ -34,9 +34,6 @@ public class Venta implements Serializable {
     @Column(name = "precio")
     private Float precio;
 
-    @Column(name = "foreign_id")
-    private Double foreignId;
-
     @Type(type = "uuid-char")
     @Column(name = "codigo_seguimiento", length = 36)
     private UUID codigoSeguimiento;
@@ -85,19 +82,6 @@ public class Venta implements Serializable {
 
     public void setPrecio(Float precio) {
         this.precio = precio;
-    }
-
-    public Double getForeignId() {
-        return this.foreignId;
-    }
-
-    public Venta foreignId(Double foreignId) {
-        this.setForeignId(foreignId);
-        return this;
-    }
-
-    public void setForeignId(Double foreignId) {
-        this.foreignId = foreignId;
     }
 
     public UUID getCodigoSeguimiento() {
@@ -170,7 +154,6 @@ public class Venta implements Serializable {
             "id=" + getId() +
             ", fecha='" + getFecha() + "'" +
             ", precio=" + getPrecio() +
-            ", foreignId=" + getForeignId() +
             ", codigoSeguimiento='" + getCodigoSeguimiento() + "'" +
             "}";
     }

@@ -22,6 +22,7 @@ describe('DetalleVenta Form Service', () => {
             id: expect.any(Object),
             cantidad: expect.any(Object),
             subtotal: expect.any(Object),
+            foreignId: expect.any(Object),
             venta: expect.any(Object),
             menu: expect.any(Object),
           })
@@ -36,6 +37,7 @@ describe('DetalleVenta Form Service', () => {
             id: expect.any(Object),
             cantidad: expect.any(Object),
             subtotal: expect.any(Object),
+            foreignId: expect.any(Object),
             venta: expect.any(Object),
             menu: expect.any(Object),
           })

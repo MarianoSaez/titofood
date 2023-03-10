@@ -68,11 +68,7 @@ class VentaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Venta createEntity(EntityManager em) {
-        Venta venta = new Venta()
-            .fecha(DEFAULT_FECHA)
-            .precio(DEFAULT_PRECIO)
-            .foreignId(DEFAULT_FOREIGN_ID)
-            .codigoSeguimiento(DEFAULT_CODIGO_SEGUIMIENTO);
+        Venta venta = new Venta().fecha(DEFAULT_FECHA).precio(DEFAULT_PRECIO).codigoSeguimiento(DEFAULT_CODIGO_SEGUIMIENTO);
         return venta;
     }
 
@@ -83,11 +79,7 @@ class VentaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static Venta createUpdatedEntity(EntityManager em) {
-        Venta venta = new Venta()
-            .fecha(UPDATED_FECHA)
-            .precio(UPDATED_PRECIO)
-            .foreignId(UPDATED_FOREIGN_ID)
-            .codigoSeguimiento(UPDATED_CODIGO_SEGUIMIENTO);
+        Venta venta = new Venta().fecha(UPDATED_FECHA).precio(UPDATED_PRECIO).codigoSeguimiento(UPDATED_CODIGO_SEGUIMIENTO);
         return venta;
     }
 
@@ -111,7 +103,6 @@ class VentaResourceIT {
         Venta testVenta = ventaList.get(ventaList.size() - 1);
         assertThat(testVenta.getFecha()).isEqualTo(DEFAULT_FECHA);
         assertThat(testVenta.getPrecio()).isEqualTo(DEFAULT_PRECIO);
-        assertThat(testVenta.getForeignId()).isEqualTo(DEFAULT_FOREIGN_ID);
         assertThat(testVenta.getCodigoSeguimiento()).isEqualTo(DEFAULT_CODIGO_SEGUIMIENTO);
     }
 
@@ -188,11 +179,7 @@ class VentaResourceIT {
         Venta updatedVenta = ventaRepository.findById(venta.getId()).get();
         // Disconnect from session so that the updates on updatedVenta are not directly saved in db
         em.detach(updatedVenta);
-        updatedVenta
-            .fecha(UPDATED_FECHA)
-            .precio(UPDATED_PRECIO)
-            .foreignId(UPDATED_FOREIGN_ID)
-            .codigoSeguimiento(UPDATED_CODIGO_SEGUIMIENTO);
+        updatedVenta.fecha(UPDATED_FECHA).precio(UPDATED_PRECIO).codigoSeguimiento(UPDATED_CODIGO_SEGUIMIENTO);
 
         restVentaMockMvc
             .perform(
@@ -208,7 +195,6 @@ class VentaResourceIT {
         Venta testVenta = ventaList.get(ventaList.size() - 1);
         assertThat(testVenta.getFecha()).isEqualTo(UPDATED_FECHA);
         assertThat(testVenta.getPrecio()).isEqualTo(UPDATED_PRECIO);
-        assertThat(testVenta.getForeignId()).isEqualTo(UPDATED_FOREIGN_ID);
         assertThat(testVenta.getCodigoSeguimiento()).isEqualTo(UPDATED_CODIGO_SEGUIMIENTO);
     }
 
@@ -296,7 +282,6 @@ class VentaResourceIT {
         Venta testVenta = ventaList.get(ventaList.size() - 1);
         assertThat(testVenta.getFecha()).isEqualTo(DEFAULT_FECHA);
         assertThat(testVenta.getPrecio()).isEqualTo(UPDATED_PRECIO);
-        assertThat(testVenta.getForeignId()).isEqualTo(DEFAULT_FOREIGN_ID);
         assertThat(testVenta.getCodigoSeguimiento()).isEqualTo(UPDATED_CODIGO_SEGUIMIENTO);
     }
 
@@ -312,11 +297,7 @@ class VentaResourceIT {
         Venta partialUpdatedVenta = new Venta();
         partialUpdatedVenta.setId(venta.getId());
 
-        partialUpdatedVenta
-            .fecha(UPDATED_FECHA)
-            .precio(UPDATED_PRECIO)
-            .foreignId(UPDATED_FOREIGN_ID)
-            .codigoSeguimiento(UPDATED_CODIGO_SEGUIMIENTO);
+        partialUpdatedVenta.fecha(UPDATED_FECHA).precio(UPDATED_PRECIO).codigoSeguimiento(UPDATED_CODIGO_SEGUIMIENTO);
 
         restVentaMockMvc
             .perform(
@@ -332,7 +313,6 @@ class VentaResourceIT {
         Venta testVenta = ventaList.get(ventaList.size() - 1);
         assertThat(testVenta.getFecha()).isEqualTo(UPDATED_FECHA);
         assertThat(testVenta.getPrecio()).isEqualTo(UPDATED_PRECIO);
-        assertThat(testVenta.getForeignId()).isEqualTo(UPDATED_FOREIGN_ID);
         assertThat(testVenta.getCodigoSeguimiento()).isEqualTo(UPDATED_CODIGO_SEGUIMIENTO);
     }
 

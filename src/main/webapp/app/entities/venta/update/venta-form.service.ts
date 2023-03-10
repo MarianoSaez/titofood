@@ -33,7 +33,6 @@ type VentaFormGroupContent = {
   id: FormControl<VentaFormRawValue['id'] | NewVenta['id']>;
   fecha: FormControl<VentaFormRawValue['fecha']>;
   precio: FormControl<VentaFormRawValue['precio']>;
-  foreignId: FormControl<VentaFormRawValue['foreignId']>;
   codigoSeguimiento: FormControl<VentaFormRawValue['codigoSeguimiento']>;
 };
 
@@ -56,7 +55,6 @@ export class VentaFormService {
       ),
       fecha: new FormControl(ventaRawValue.fecha),
       precio: new FormControl(ventaRawValue.precio),
-      foreignId: new FormControl(ventaRawValue.foreignId),
       codigoSeguimiento: new FormControl(ventaRawValue.codigoSeguimiento),
     });
   }

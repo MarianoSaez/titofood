@@ -1,5 +1,6 @@
 package ar.edu.um.fi.programacion2.web.rest.dto;
 
+import ar.edu.um.fi.programacion2.domain.DetalleVenta;
 import ar.edu.um.fi.programacion2.domain.Venta;
 import java.time.Instant;
 
@@ -9,10 +10,10 @@ public class VentaForReporteDTO {
     private Float precio;
     private Long foreignId;
 
-    public VentaForReporteDTO(Venta v) {
+    public VentaForReporteDTO(Venta v, DetalleVenta dv) {
         this.fecha = v.getFecha();
-        this.precio = v.getPrecio();
-        this.foreignId = v.getForeignId().longValue();
+        this.precio = dv.getSubtotal();
+        this.foreignId = dv.getForeignId().longValue();
     }
 
     public Instant getFecha() {

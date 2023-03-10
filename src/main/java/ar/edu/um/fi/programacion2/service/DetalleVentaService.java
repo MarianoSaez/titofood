@@ -64,6 +64,9 @@ public class DetalleVentaService {
                 if (detalleVenta.getSubtotal() != null) {
                     existingDetalleVenta.setSubtotal(detalleVenta.getSubtotal());
                 }
+                if (detalleVenta.getForeignId() != null) {
+                    existingDetalleVenta.setForeignId(detalleVenta.getForeignId());
+                }
 
                 return existingDetalleVenta;
             })

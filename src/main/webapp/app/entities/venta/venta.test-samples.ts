@@ -7,16 +7,15 @@ export const sampleWithRequiredData: IVenta = {
 };
 
 export const sampleWithPartialData: IVenta = {
-  id: 4145,
-  precio: 56225,
+  id: 11474,
+  precio: 4145,
 };
 
 export const sampleWithFullData: IVenta = {
-  id: 71903,
-  fecha: dayjs('2023-01-14T08:53'),
-  precio: 41728,
-  foreignId: 17570,
-  codigoSeguimiento: '3e4a4441-be45-4397-bc18-ad534a75c9b5',
+  id: 56225,
+  fecha: dayjs('2023-01-14T05:20'),
+  precio: 57127,
+  codigoSeguimiento: '623e4a44-41be-4453-973c-18ad534a75c9',
 };
 
 export const sampleWithNewData: NewVenta = {

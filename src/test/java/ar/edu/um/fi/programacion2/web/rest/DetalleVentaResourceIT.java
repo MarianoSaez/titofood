@@ -35,6 +35,9 @@ class DetalleVentaResourceIT {
     private static final Float DEFAULT_SUBTOTAL = 1F;
     private static final Float UPDATED_SUBTOTAL = 2F;
 
+    private static final Double DEFAULT_FOREIGN_ID = 1D;
+    private static final Double UPDATED_FOREIGN_ID = 2D;
+
     private static final String ENTITY_API_URL = "/api/detalle-ventas";
     private static final String ENTITY_API_URL_ID = ENTITY_API_URL + "/{id}";
 
@@ -59,7 +62,7 @@ class DetalleVentaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static DetalleVenta createEntity(EntityManager em) {
-        DetalleVenta detalleVenta = new DetalleVenta().cantidad(DEFAULT_CANTIDAD).subtotal(DEFAULT_SUBTOTAL);
+        DetalleVenta detalleVenta = new DetalleVenta().cantidad(DEFAULT_CANTIDAD).subtotal(DEFAULT_SUBTOTAL).foreignId(DEFAULT_FOREIGN_ID);
         return detalleVenta;
     }
 
@@ -70,7 +73,7 @@ class DetalleVentaResourceIT {
      * if they test an entity which requires the current entity.
      */
     public static DetalleVenta createUpdatedEntity(EntityManager em) {
-        DetalleVenta detalleVenta = new DetalleVenta().cantidad(UPDATED_CANTIDAD).subtotal(UPDATED_SUBTOTAL);
+        DetalleVenta detalleVenta = new DetalleVenta().cantidad(UPDATED_CANTIDAD).subtotal(UPDATED_SUBTOTAL).foreignId(UPDATED_FOREIGN_ID);
         return detalleVenta;
     }
 
@@ -94,6 +97,7 @@ class DetalleVentaResourceIT {
         DetalleVenta testDetalleVenta = detalleVentaList.get(detalleVentaList.size() - 1);
         assertThat(testDetalleVenta.getCantidad()).isEqualTo(DEFAULT_CANTIDAD);
         assertThat(testDetalleVenta.getSubtotal()).isEqualTo(DEFAULT_SUBTOTAL);
+        assertThat(testDetalleVenta.getForeignId()).isEqualTo(DEFAULT_FOREIGN_ID);
     }
 
     @Test
@@ -127,7 +131,8 @@ class DetalleVentaResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(detalleVenta.getId().intValue())))
             .andExpect(jsonPath("$.[*].cantidad").value(hasItem(DEFAULT_CANTIDAD)))
-            .andExpect(jsonPath("$.[*].subtotal").value(hasItem(DEFAULT_SUBTOTAL.doubleValue())));
+            .andExpect(jsonPath("$.[*].subtotal").value(hasItem(DEFAULT_SUBTOTAL.doubleValue())))
+            .andExpect(jsonPath("$.[*].foreignId").value(hasItem(DEFAULT_FOREIGN_ID.doubleValue())));
     }
 
     @Test
@@ -143,7 +148,8 @@ class DetalleVentaResourceIT {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
             .andExpect(jsonPath("$.id").value(detalleVenta.getId().intValue()))
             .andExpect(jsonPath("$.cantidad").value(DEFAULT_CANTIDAD))
-            .andExpect(jsonPath("$.subtotal").value(DEFAULT_SUBTOTAL.doubleValue()));
+            .andExpect(jsonPath("$.subtotal").value(DEFAULT_SUBTOTAL.doubleValue()))
+            .andExpect(jsonPath("$.foreignId").value(DEFAULT_FOREIGN_ID.doubleValue()));
     }
 
     @Test
@@ -165,7 +171,7 @@ class DetalleVentaResourceIT {
         DetalleVenta updatedDetalleVenta = detalleVentaRepository.findById(detalleVenta.getId()).get();
         // Disconnect from session so that the updates on updatedDetalleVenta are not directly saved in db
         em.detach(updatedDetalleVenta);
-        updatedDetalleVenta.cantidad(UPDATED_CANTIDAD).subtotal(UPDATED_SUBTOTAL);
+        updatedDetalleVenta.cantidad(UPDATED_CANTIDAD).subtotal(UPDATED_SUBTOTAL).foreignId(UPDATED_FOREIGN_ID);
 
         restDetalleVentaMockMvc
             .perform(
@@ -181,6 +187,7 @@ class DetalleVentaResourceIT {
         DetalleVenta testDetalleVenta = detalleVentaList.get(detalleVentaList.size() - 1);
         assertThat(testDetalleVenta.getCantidad()).isEqualTo(UPDATED_CANTIDAD);
         assertThat(testDetalleVenta.getSubtotal()).isEqualTo(UPDATED_SUBTOTAL);
+        assertThat(testDetalleVenta.getForeignId()).isEqualTo(UPDATED_FOREIGN_ID);
     }
 
     @Test
@@ -265,6 +272,7 @@ class DetalleVentaResourceIT {
         DetalleVenta testDetalleVenta = detalleVentaList.get(detalleVentaList.size() - 1);
         assertThat(testDetalleVenta.getCantidad()).isEqualTo(DEFAULT_CANTIDAD);
         assertThat(testDetalleVenta.getSubtotal()).isEqualTo(DEFAULT_SUBTOTAL);
+        assertThat(testDetalleVenta.getForeignId()).isEqualTo(DEFAULT_FOREIGN_ID);
     }
 
     @Test
@@ -279,7 +287,7 @@ class DetalleVentaResourceIT {
         DetalleVenta partialUpdatedDetalleVenta = new DetalleVenta();
         partialUpdatedDetalleVenta.setId(detalleVenta.getId());
 
-        partialUpdatedDetalleVenta.cantidad(UPDATED_CANTIDAD).subtotal(UPDATED_SUBTOTAL);
+        partialUpdatedDetalleVenta.cantidad(UPDATED_CANTIDAD).subtotal(UPDATED_SUBTOTAL).foreignId(UPDATED_FOREIGN_ID);
 
         restDetalleVentaMockMvc
             .perform(
@@ -295,6 +303,7 @@ class DetalleVentaResourceIT {
         DetalleVenta testDetalleVenta = detalleVentaList.get(detalleVentaList.size() - 1);
         assertThat(testDetalleVenta.getCantidad()).isEqualTo(UPDATED_CANTIDAD);
         assertThat(testDetalleVenta.getSubtotal()).isEqualTo(UPDATED_SUBTOTAL);
+        assertThat(testDetalleVenta.getForeignId()).isEqualTo(UPDATED_FOREIGN_ID);
     }
 
     @Test

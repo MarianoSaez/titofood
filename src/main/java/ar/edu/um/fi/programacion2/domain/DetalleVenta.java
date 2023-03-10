@@ -29,6 +29,9 @@ public class DetalleVenta implements Serializable {
     @Column(name = "subtotal")
     private Float subtotal;
 
+    @Column(name = "foreign_id")
+    private Double foreignId;
+
     @ManyToOne
     @JsonIgnoreProperties(value = { "detalleVentas" }, allowSetters = true)
     private Venta venta;
@@ -76,6 +79,19 @@ public class DetalleVenta implements Serializable {
 
     public void setSubtotal(Float subtotal) {
         this.subtotal = subtotal;
+    }
+
+    public Double getForeignId() {
+        return this.foreignId;
+    }
+
+    public DetalleVenta foreignId(Double foreignId) {
+        this.setForeignId(foreignId);
+        return this;
+    }
+
+    public void setForeignId(Double foreignId) {
+        this.foreignId = foreignId;
     }
 
     public Venta getVenta() {
@@ -130,6 +146,7 @@ public class DetalleVenta implements Serializable {
             "id=" + getId() +
             ", cantidad=" + getCantidad() +
             ", subtotal=" + getSubtotal() +
+            ", foreignId=" + getForeignId() +
             "}";
     }
 }

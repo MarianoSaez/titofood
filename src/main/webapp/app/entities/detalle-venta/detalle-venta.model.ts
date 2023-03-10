@@ -5,6 +5,7 @@ export interface IDetalleVenta {
   id: number;
   cantidad?: number | null;
   subtotal?: number | null;
+  foreignId?: number | null;
   venta?: Pick<IVenta, 'id'> | null;
   menu?: Pick<IMenu, 'id'> | null;
 }

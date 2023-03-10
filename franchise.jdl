@@ -29,13 +29,14 @@ entity Menu {
 entity Venta {
 	fecha Instant
     precio Float
-	foreignId Double
     codigoSeguimiento UUID
 }
 
 entity DetalleVenta {
     cantidad Integer
     subtotal Float
+    foreignId Double
+
 }
 
 relationship OneToMany {

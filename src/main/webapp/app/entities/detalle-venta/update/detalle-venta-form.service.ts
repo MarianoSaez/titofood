@@ -20,6 +20,7 @@ type DetalleVentaFormGroupContent = {
   id: FormControl<IDetalleVenta['id'] | NewDetalleVenta['id']>;
   cantidad: FormControl<IDetalleVenta['cantidad']>;
   subtotal: FormControl<IDetalleVenta['subtotal']>;
+  foreignId: FormControl<IDetalleVenta['foreignId']>;
   venta: FormControl<IDetalleVenta['venta']>;
   menu: FormControl<IDetalleVenta['menu']>;
 };
@@ -43,6 +44,7 @@ export class DetalleVentaFormService {
       ),
       cantidad: new FormControl(detalleVentaRawValue.cantidad),
       subtotal: new FormControl(detalleVentaRawValue.subtotal),
+      foreignId: new FormControl(detalleVentaRawValue.foreignId),
       venta: new FormControl(detalleVentaRawValue.venta),
       menu: new FormControl(detalleVentaRawValue.menu),
     });

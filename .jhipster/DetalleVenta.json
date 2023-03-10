@@ -12,6 +12,10 @@
     {
       "fieldName": "subtotal",
       "fieldType": "Float"
+    },
+    {
+      "fieldName": "foreignId",
+      "fieldType": "Double"
     }
   ],
   "fluentMethods": true,

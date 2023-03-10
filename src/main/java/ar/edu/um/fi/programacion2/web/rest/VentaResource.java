@@ -3,7 +3,7 @@ package ar.edu.um.fi.programacion2.web.rest;
 import ar.edu.um.fi.programacion2.domain.DetalleVenta;
 import ar.edu.um.fi.programacion2.domain.Menu;
 import ar.edu.um.fi.programacion2.domain.Venta;
-import ar.edu.um.fi.programacion2.repository.MenuRepository;
+import ar.edu.um.fi.programacion2.repository.DetalleVentaRepository;
 import ar.edu.um.fi.programacion2.repository.VentaRepository;
 import ar.edu.um.fi.programacion2.service.DetalleVentaService;
 import ar.edu.um.fi.programacion2.service.MenuService;
@@ -14,20 +14,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
-import javax.persistence.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -57,16 +53,21 @@ public class VentaResource {
 
     private final DetalleVentaService detalleVentaService;
 
+    @Autowired
+    private final DetalleVentaRepository detalleVentaRepository;
+
     public VentaResource(
         VentaService ventaService,
         VentaRepository ventaRepository,
         MenuService menuService,
-        DetalleVentaService detalleVentaService
+        DetalleVentaService detalleVentaService,
+        DetalleVentaRepository detalleVentaRepository
     ) {
         this.ventaService = ventaService;
         this.ventaRepository = ventaRepository;
         this.menuService = menuService;
         this.detalleVentaService = detalleVentaService;
+        this.detalleVentaRepository = detalleVentaRepository;
     }
 
     /**
@@ -178,13 +179,22 @@ public class VentaResource {
      * */
     @GetMapping("/ventas/{fechaInicio}/{fechaFin}")
     public ResponseEntity<List<VentaForReporteDTO>> getVentasbetweenDates(@PathVariable String fechaInicio, @PathVariable String fechaFin) {
-        List<VentaForReporteDTO> ventas = ventaService
-            .findBetweenDate(LocalDateTime.parse(fechaInicio), LocalDateTime.parse(fechaFin))
-            .stream()
-            .map(VentaForReporteDTO::new)
-            .collect(Collectors.toList());
+        List<Venta> ventas = ventaService.findBetweenDate(LocalDateTime.parse(fechaInicio), LocalDateTime.parse(fechaFin));
 
-        return ResponseEntity.ok().body(ventas);
+        System.out.println("\n\n\n" + ventas + "\n\n\n");
+
+        List<VentaForReporteDTO> ventaForReporteDTOList = new ArrayList<>();
+
+        for (Venta venta : ventas) {
+            for (DetalleVenta dv : detalleVentaRepository.findByVenta(venta)) {
+                System.out.println("\n\n\n" + dv + "\n\n\n");
+                ventaForReporteDTOList.add(new VentaForReporteDTO(venta, dv));
+            }
+        }
+
+        System.out.println("\n\n\n" + ventaForReporteDTOList);
+
+        return ResponseEntity.ok().body(ventaForReporteDTOList);
     }
 
     /**
@@ -234,7 +244,7 @@ public class VentaResource {
         });
 
         venta.setPrecio(precioTotal.get());
-        Instant fecha = Instant.now();
+        Instant fecha = LocalDateTime.now().toInstant(ZoneOffset.UTC);
         venta.setFecha(fecha);
 
         Venta result = ventaService.save(venta); // Guarda el nuevo objeto Venta
@@ -253,6 +263,8 @@ public class VentaResource {
             detalleVenta.setMenu(menu);
 
             detalleVenta.setVenta(ventaAux);
+
+            detalleVenta.setForeignId(menu.getForeignId());
 
             detalleVentaService.save(detalleVenta);
         });

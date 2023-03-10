@@ -108,9 +108,17 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
-user: bruno
-password: bruno123
-franchise-id: 0276c5be-9663-4b8a-aaf4-736db649a2de
-token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpYW5vIiwiYXV0aCI6IiIsImV4cCI6MTk4ODc0MjEyNX0.PBjE_eyl0ssqsodM2NlbVQc2EMgsklcFMC7bRHU3U-omWfuGkkSVG2bfSJZwr8_UQSfUaaQ-stndlAdTjy_8Mg
-url.principal: http://10.101.102.1:8080/api/
+application:
+  reportAPIToken: definedAtRuntime
+  reportAPIBaseURL: http://localhost:8081/api
+  reportAPIUsername: franquicia
+  reportAPIPassword: franquicia
+
+  mainAPIToken: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0aXRvZm9vZCIsImF1dGgiOiIiLCJleHAiOjE5OTI3NzAwMjN9.j8neTNht5GBgeYurRPyKSGsIYfQ2n5wUgdlTl9NvL_8pAJkZqd_OSenoCals2M79wCb9Nu4vvBhgtkUeEInKWw
+  mainAPIBaseURL: http://10.101.102.1:8080/api
+  mainAPIFranquiciaId: 40e8be94-6bb4-4bd7-a81a-14a82167de5e
+#user: bruno
+#password: bruno123
+#franchise-id: 0276c5be-9663-4b8a-aaf4-736db649a2de
+#token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJtYXJpYW5vIiwiYXV0aCI6IiIsImV4cCI6MTk4ODc0MjEyNX0.PBjE_eyl0ssqsodM2NlbVQc2EMgsklcFMC7bRHU3U-omWfuGkkSVG2bfSJZwr8_UQSfUaaQ-stndlAdTjy_8Mg
+#url.principal: http://10.101.102.1:8080/api/

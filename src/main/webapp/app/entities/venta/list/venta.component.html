@@ -50,12 +50,6 @@
               <fa-icon class="p-1" icon="sort"></fa-icon>
             </div>
           </th>
-          <th scope="col" jhiSortBy="foreignId">
-            <div class="d-flex">
-              <span jhiTranslate="franchiseApp.venta.foreignId">Foreign Id</span>
-              <fa-icon class="p-1" icon="sort"></fa-icon>
-            </div>
-          </th>
           <th scope="col" jhiSortBy="codigoSeguimiento">
             <div class="d-flex">
               <span jhiTranslate="franchiseApp.venta.codigoSeguimiento">Codigo Seguimiento</span>
@@ -72,7 +66,6 @@
           </td>
           <td>{{ venta.fecha | formatMediumDatetime }}</td>
           <td>{{ venta.precio }}</td>
-          <td>{{ venta.foreignId }}</td>
           <td>{{ venta.codigoSeguimiento }}</td>
           <td class="text-end">
             <div class="btn-group">

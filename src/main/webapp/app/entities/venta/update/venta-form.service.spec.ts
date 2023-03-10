@@ -22,7 +22,6 @@ describe('Venta Form Service', () => {
             id: expect.any(Object),
             fecha: expect.any(Object),
             precio: expect.any(Object),
-            foreignId: expect.any(Object),
             codigoSeguimiento: expect.any(Object),
           })
         );
@@ -36,7 +35,6 @@ describe('Venta Form Service', () => {
             id: expect.any(Object),
             fecha: expect.any(Object),
             precio: expect.any(Object),
-            foreignId: expect.any(Object),
             codigoSeguimiento: expect.any(Object),
           })
         );
