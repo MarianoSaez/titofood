@@ -246,6 +246,7 @@ public class VentaResource {
         venta.setPrecio(precioTotal.get());
         Instant fecha = LocalDateTime.now().toInstant(ZoneOffset.UTC);
         venta.setFecha(fecha);
+        venta.setCodigoSeguimiento(UUID.randomUUID());
 
         Venta result = ventaService.save(venta); // Guarda el nuevo objeto Venta
 
@@ -272,6 +273,6 @@ public class VentaResource {
         return ResponseEntity
             .created(new URI("/api/ventas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(applicationName, true, ENTITY_NAME, result.getId().toString()))
-            .body("result");
+            .body("{\"codigoSeguimiento\" : \"" + venta.getCodigoSeguimiento() + "\" }");
     }
 }
